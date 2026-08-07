@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="theme-color" content="#ffd700"/>
+<link rel="manifest" href="./manifest.json"/>
+<title>Bolt Spin Casino</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&display=swap');
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{background:#05040a;color:#fff;font-family:'Orbitron',system-ui,sans-serif;user-select:none;display:flex;flex-direction:column}
+.glow{text-shadow:0 0 12px currentColor}
+
+.jp-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+.jp{text-align:center;border-radius:6px;padding:3px 5px;border:2px solid;line-height:1.15}
+.jp-g{background:linear-gradient(180deg,#1a1400,#0c0a00);border-color:#ffd700;color:#ffd700}
+.jp-j{background:linear-gradient(180deg,#001818,#000c0c);border-color:#00e5ff;color:#00e5ff}
+.jp-n{background:linear-gradient(180deg,#001800,#000c00);border-color:#00ff66;color:#00ff66}
+.jp-m{background:linear-gradient(180deg,#180010,#0c0008);border-color:#ff66aa;color:#ff66aa}
+.jp-l{font-size:.48rem;letter-spacing:1px;opacity:.8}
+.jp-v{font-size:clamp(.65rem,2vw,.95rem);font-weight:900}
+
+.ct-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px}
+.ct{text-align:center;border-radius:6px;padding:2px 4px;border:1.5px solid #ff66cc;background:linear-gradient(180deg,#1a0018,#0c000c);line-height:1.1}
+.ct-l{font-size:.42rem;letter-spacing:1px;color:#ff99dd;opacity:.85}
+.ct-v{font-size:clamp(.55rem,1.8vw,.8rem);font-weight:900;color:#ff66cc}
+
+.card{border-radius:12px;padding:.65rem;position:relative;cursor:pointer;overflow:hidden;background:#0e0c16;border:2px solid transparent;transition:.2s;min-height:120px;height:100%;display:flex;flex-direction:column;justify-content:space-between}
+.card::before{content:'';position:absolute;inset:-2px;z-index:-1;border-radius:inherit;opacity:.55}
+.card:hover:not(.locked)::before{opacity:1}
+.card.locked{filter:grayscale(.9) brightness(.45);cursor:not-allowed}
+.c-pearl::before{background:linear-gradient(135deg,#00d4ff,#006688)}
+.c-lantern::before{background:linear-gradient(135deg,#ffaa00,#cc4400)}
+.c-sahara::before{background:linear-gradient(135deg,#ffcc00,#aa7700)}
+.c-tiki::before{background:linear-gradient(135deg,#00ccff,#0066aa)}
+.c-train::before{background:linear-gradient(135deg,#ff00aa,#6600cc)}
+.c-heart::before{background:linear-gradient(135deg,#ff3399,#aa0066)}
+.c-stakes::before{background:linear-gradient(135deg,#00ff99,#008855)}
+.c-buffalo::before{background:linear-gradient(135deg,#cc9966,#886633)}
+.c-moon::before{background:linear-gradient(135deg,#6688ff,#3344aa)}
+.c-dragon::before{background:linear-gradient(135deg,#ff3300,#aa1100)}
+
+#reels-area{flex:1 1 auto;display:flex;align-items:stretch;min-height:0;width:100%;position:relative}
+.reels-box{width:100%;display:flex;flex-direction:column;position:relative}
+.grid5{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(3,1fr);gap:2px;background:#000;padding:3px;border-radius:8px;border:3px solid #ffd700;box-shadow:0 0 24px rgba(255,215,0,.4),inset 0 0 30px #000;flex:1;min-height:180px;overflow:hidden}
+.cell{border-radius:5px;background:linear-gradient(160deg,#1a1525,#0a0810);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:clamp(1.5rem,7.5vw,3.2rem);position:relative;border:1px solid rgba(255,215,0,.08);overflow:visible;z-index:1}
+.cell.spinning{filter:blur(1.5px) brightness(1.1);z-index:1}
+.cell.orb{background:linear-gradient(160deg,#2a1800,#140c00);border:2px solid #ffd700;box-shadow:0 0 14px rgba(255,215,0,.75);animation:pulse 1.1s ease-in-out infinite;z-index:2}
+.cell.train{background:linear-gradient(160deg,#1a0030,#0c0018);border:2px solid #ff00aa;box-shadow:0 0 14px rgba(255,0,170,.75);animation:pulse 1s infinite;z-index:2}
+.cell.scat{border-color:#00ff88;box-shadow:0 0 14px rgba(0,255,136,.7);z-index:3;animation:scatPulse 0.6s ease infinite}
+.cell.scat-hot{border:3px solid #00ff88 !important;box-shadow:0 0 22px #00ff88,0 0 10px #fff inset;z-index:6;animation:scatPulse 0.4s ease infinite}
+@keyframes scatPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.cell.win{
+  z-index:5 !important;
+  animation:wflash .4s ease 6;
+  outline:3px solid #00ff88;
+  outline-offset:-2px;
+  box-shadow:0 0 18px #00ff88,0 0 8px #00ff88 inset;
+  border-color:#00ff88 !important;
+}
+.cell.land{animation:landBounce .28s ease-out}
+@keyframes pulse{0%,100%{box-shadow:0 0 10px rgba(255,215,0,.5)}50%{box-shadow:0 0 22px rgba(255,215,0,1)}}
+@keyframes wflash{
+  0%,100%{transform:scale(1);box-shadow:0 0 10px #00ff88}
+  50%{transform:scale(1.08);box-shadow:0 0 28px #00ff88,0 0 12px #00ff88 inset}
+}
+@keyframes landBounce{0%{transform:translateY(-18%)}60%{transform:translateY(4%)}100%{transform:translateY(0)}}
+.tag{font-size:clamp(.4rem,1.5vw,.65rem);font-weight:800;color:#ffd700;background:rgba(0,0,0,.85);padding:1px 3px;border-radius:2px;margin-top:1px;position:relative;z-index:3}
+.jtag{color:#ff6b6b}
+
+.btn{background:linear-gradient(180deg,#ffd700,#b8860b);color:#1a1000;font-weight:900;border:none;border-radius:26px;padding:6px 11px;cursor:pointer;font-family:inherit;font-size:.7rem;box-shadow:0 2px 6px rgba(255,215,0,.3)}
+.btn:active:not(:disabled){transform:translateY(1px)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn-spin{background:linear-gradient(180deg,#00e5ff,#007a99);color:#001018;font-size:1.05rem;padding:11px 34px}
+.btn-auto{background:linear-gradient(180deg,#ff6b00,#cc4400);color:#1a0800}
+.btn-auto.active{background:linear-gradient(180deg,#ff2200,#990000)}
+.btn-opt{background:#222;color:#777;min-width:32px;padding:5px 6px;box-shadow:none}
+.btn-opt.active{background:linear-gradient(180deg,#00ff88,#00aa55);color:#003311;box-shadow:0 0 6px rgba(0,255,136,.35)}
+.btn-sm{padding:5px 8px;font-size:.62rem}
+.btn-toggle{background:#2a2a35;color:#888;min-width:64px}
+.btn-toggle.active{background:linear-gradient(180deg,#00e5ff,#007a99);color:#001018}
+
+.meter{background:#0c0814;border:1px solid rgba(255,215,0,.25);border-radius:5px;padding:2px 7px;font-size:.7rem}
+.banner{background:linear-gradient(90deg,#ff00aa,#ffd700,#00e5ff);background-size:200% 100%;animation:shine 1.8s linear infinite;color:#000;font-weight:900;text-align:center;padding:4px;border-radius:5px;font-size:.68rem}
+@keyframes shine{to{background-position:200%}}
+.modal-bg{background:rgba(0,0,0,.92);backdrop-filter:blur(6px)}
+.bar{height:8px;background:#1a1225;border-radius:4px;overflow:hidden;border:1px solid rgba(255,215,0,.2)}
+.fill{height:100%;background:linear-gradient(90deg,#00e5ff,#ffd700);transition:width .3s;border-radius:3px}
+
+.theme-pearl .grid5{border-color:#00d4ff}
+.theme-lantern .grid5{border-color:#ffaa00}
+.theme-sahara .grid5{border-color:#ffcc00}
+.theme-tiki .grid5{border-color:#00ccff}
+.theme-train .grid5{border-color:#ff00aa}
+.theme-heart .grid5{border-color:#ff3399}
+.theme-stakes .grid5{border-color:#00ff99}
+.theme-buffalo .grid5{border-color:#cc9966}
+.theme-moon .grid5{border-color:#6688ff}
+.theme-dragon .grid5{border-color:#ff3300}
+
+#overlay{position:fixed;inset:0;z-index:40;pointer-events:none;display:flex;align-items:flex-start;justify-content:center;padding-top:12vh;opacity:0;transition:opacity .4s;background:transparent}
+#overlay.show{opacity:1}
+#overlay.fade-out{opacity:0}
+.ov-msg{font-weight:900;font-size:clamp(1.2rem,5vw,2.4rem);text-align:center;padding:12px 24px;border-radius:12px;pointer-events:none}
+.ov-cash{background:linear-gradient(90deg,#ff00aa,#ffd700,#00e5ff);background-size:300% 100%;animation:shine 1s linear infinite;color:#000}
+.ov-big{color:#ffd700;text-shadow:0 0 18px #ffd700,0 0 36px #ffaa00,0 2px 4px #000}
+
+#win-pause{
+  display:none;text-align:center;font-size:.72rem;font-weight:900;
+  color:#ffd700;padding:4px 8px;letter-spacing:1px;
+  text-shadow:0 0 10px #ffd700;animation:blink 1.1s ease infinite
+}
+#win-pause.show{display:block}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+
+#reel-confetti{position:absolute;inset:0;pointer-events:none;z-index:15;border-radius:8px}
+
+/* Coin rain – full screen, skippable */
+#coin-rain{
+  position:fixed;inset:0;z-index:42;pointer-events:auto;cursor:pointer;
+  display:none;background:rgba(0,0,0,.25)
+}
+#coin-rain.show{display:block}
+#coin-rain canvas{position:absolute;inset:0;width:100%;height:100%}
+#win-ticker{
+  display:none;position:fixed;inset:0;z-index:48;pointer-events:none;
+  flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at center,rgba(0,0,0,.55) 0%,rgba(0,0,0,.25) 60%,transparent 100%);
+}
+#win-ticker.show{display:flex}
+#win-ticker .wt-label{font-size:1.1rem;font-weight:900;color:#ffd700;letter-spacing:3px;text-shadow:0 0 12px #ffaa00;margin-bottom:.3rem}
+#win-ticker .wt-amt{font-size:clamp(2.2rem,10vw,3.6rem);font-weight:900;color:#00ff88;text-shadow:0 0 20px #00ff88,0 0 40px #00aa55;font-variant-numeric:tabular-nums}
+#win-ticker .wt-hint{margin-top:.6rem;font-size:.75rem;color:#fff;opacity:.85;letter-spacing:2px;animation:pulse 1.2s ease infinite}
+#coin-rain .skip-hint{
+  position:absolute;bottom:18%;left:50%;transform:translateX(-50%);
+  font-size:.7rem;font-weight:900;color:#ffd700;letter-spacing:2px;
+  text-shadow:0 0 10px #000;animation:blink 1s ease infinite;white-space:nowrap
+}
+
+#train-fly{
+  position:fixed;inset:0;z-index:45;pointer-events:none;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.55)
+}
+#train-fly.show{display:flex}
+#train-fly .engine{
+  font-size:clamp(3rem,12vw,6rem);
+  animation:trainPass 1.8s ease-in-out forwards;
+  filter:drop-shadow(0 0 20px #ff00aa)
+}
+@keyframes trainPass{
+  0%{transform:translateX(-120vw) scale(.8);opacity:0}
+  20%{opacity:1}
+  50%{transform:translateX(0) scale(1.15)}
+  80%{opacity:1}
+  100%{transform:translateX(120vw) scale(.8);opacity:0}
+}
+#train-fly .train-label{
+  position:absolute;top:58%;left:50%;transform:translateX(-50%);
+  font-weight:900;font-size:clamp(.9rem,3.5vw,1.4rem);
+  color:#ffd700;text-shadow:0 0 14px #ff00aa;white-space:nowrap
+}
+
+@media(max-width:640px){.cell{font-size:clamp(1.3rem,8.5vw,2.4rem)}.btn-spin{padding:10px 26px;font-size:.95rem}.grid5{min-height:190px}}
+@media(min-width:1200px){.grid5{min-height:300px}.cell{font-size:clamp(1.8rem,3.8vw,3.4rem)}}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas" style="position:fixed;inset:0;pointer-events:none;z-index:9999"></canvas>
+<div id="overlay"><div class="ov-msg" id="ov-text"></div></div>
+<div id="coin-rain"><canvas id="coin-canvas"></canvas><div class="skip-hint">TAP / SPIN TO SKIP</div></div>
+<div id="win-ticker">
+  <div class="wt-label" id="wt-label">BIG WIN</div>
+  <div class="wt-amt">$<span id="wt-val">0.00</span></div>
+  <div class="wt-hint">PRESS SPIN TO CONTINUE</div>
+</div>
+<div id="train-fly"><div class="engine">🚂💨</div><div class="train-label" id="train-fly-lbl">BOLT TRAIN</div></div>
+
+<!-- LOBBY -->
+<div id="lobby" class="flex-1 flex flex-col p-3 max-w-5xl mx-auto w-full overflow-y-auto">
+  <header class="flex flex-wrap items-center justify-between gap-2 mb-2">
+    <div>
+      <h1 class="text-xl font-black text-yellow-400 glow">⚡ BOLT SPIN</h1>
+      <p class="text-[10px] text-gray-400">Pub Casino · Virtual Play</p>
+    </div>
+    <div class="flex items-center gap-1.5">
+      <div class="meter"><i class="fas fa-coins text-yellow-400"></i> $<span id="lobby-bal" class="font-bold text-yellow-300">35000</span></div>
+      <div class="meter text-cyan-300" title="Wheel tokens"><i class="fas fa-dharmachakra"></i> <span id="lobby-tokens">0</span></div>
+      <div class="meter">Lvl <span id="lobby-lvl" class="font-bold">1</span></div>
+      <button id="btn-wheel" class="btn btn-sm" title="Reward Wheel"><i class="fas fa-dharmachakra"></i></button>
+      <button id="btn-daily" class="btn btn-sm" title="Daily"><i class="fas fa-gift"></i></button>
+      <button id="btn-help" class="btn btn-sm" title="How to Play"><i class="fas fa-question"></i></button>
+      <button id="btn-options" class="btn btn-sm"><i class="fas fa-cog"></i></button>
+      <button id="btn-sound" class="btn btn-sm"><i class="fas fa-volume-up" id="snd-ico"></i></button>
+    </div>
+  </header>
+  <div class="mb-2">
+    <div class="text-[9px] text-pink-400 font-bold mb-0.5 tracking-wider">🚂 BOLT TRAIN <span class="text-gray-500 font-normal">(all machines)</span></div>
+    <div class="ct-row">
+      <div class="ct"><div class="ct-l">MINI</div><div class="ct-v" id="lobby-ct-m">200</div></div>
+      <div class="ct"><div class="ct-l">MAJOR</div><div class="ct-v" id="lobby-ct-j">1500</div></div>
+      <div class="ct"><div class="ct-l">GRAND</div><div class="ct-v" id="lobby-ct-g">8000</div></div>
+    </div>
+  </div>
+  <div class="mb-3">
+    <div class="flex justify-between text-[11px] text-gray-300 mb-0.5"><span class="font-bold text-cyan-300">XP to next level</span><span id="xp-lbl" class="font-bold">0/350</span></div>
+    <div class="bar"><div id="xp-bar" class="fill" style="width:0%"></div></div>
+  </div>
+  <h2 class="text-xs font-bold text-cyan-400 mb-2">SELECT MACHINE</h2>
+  <div id="mach-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
+  <p class="mt-auto pt-3 text-center text-[10px] text-gray-500">Machines unlock up to Level 100 · Bet any amount you can afford</p>
+</div>
+
+<!-- GAME -->
+<div id="game" class="hidden flex-1 flex flex-col w-full max-w-3xl mx-auto p-1" style="height:100dvh">
+  <div class="flex items-center justify-between gap-1 shrink-0">
+    <button id="btn-back" class="btn btn-sm"><i class="fas fa-arrow-left"></i></button>
+    <div class="text-center flex-1 min-w-0">
+      <div id="g-name" class="font-bold text-sm text-yellow-400 truncate"></div>
+      <div class="flex items-center justify-center gap-2 text-[10px] text-gray-300 mt-0.5">
+        <span>Lvl <span id="g-lvl" class="text-cyan-300 font-bold">1</span></span>
+        <div class="bar w-28" style="height:6px"><div id="g-xp-bar" class="fill" style="width:0%"></div></div>
+        <span id="g-xp-txt" class="font-bold text-[9px]">0/350</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-1 shrink-0">
+      <div class="meter text-xs"><i class="fas fa-coins text-yellow-400"></i> $<span id="g-bal">35000</span></div>
+      <div class="meter text-xs text-cyan-300" title="Tokens"><i class="fas fa-dharmachakra"></i> <span id="g-tokens">0</span></div>
+      <button id="btn-wheel-g" class="btn btn-sm" title="Reward Wheel"><i class="fas fa-dharmachakra"></i></button>
+      <button id="btn-daily-g" class="btn btn-sm" title="Daily"><i class="fas fa-gift"></i></button>
+    </div>
+  </div>
+
+  <div class="jp-grid shrink-0 my-1">
+    <div class="jp jp-g"><div class="jp-l">GRAND</div><div class="jp-v" id="jp-g">5000</div></div>
+    <div class="jp jp-j"><div class="jp-l">MAJOR</div><div class="jp-v" id="jp-j">1000</div></div>
+  </div>
+  <div class="jp-grid shrink-0 mb-0.5">
+    <div class="jp jp-n"><div class="jp-l">MINOR</div><div class="jp-v" id="jp-n">250</div></div>
+    <div class="jp jp-m"><div class="jp-l">MINI</div><div class="jp-v" id="jp-m">50</div></div>
+  </div>
+  <div class="ct-row shrink-0 mb-1">
+    <div class="ct"><div class="ct-l">🚂 MINI</div><div class="ct-v" id="g-ct-m">200</div></div>
+    <div class="ct"><div class="ct-l">🚂 MAJOR</div><div class="ct-v" id="g-ct-j">1500</div></div>
+    <div class="ct"><div class="ct-l">🚂 GRAND</div><div class="ct-v" id="g-ct-g">8000</div></div>
+  </div>
+
+  <div class="text-[9px] text-center text-gray-400 shrink-0 mb-0.5">
+    <b class="text-yellow-400">6+</b> Orbs = Hold & Spin · <b class="text-green-400">3+</b> Scatters = Free Games · <b class="text-pink-400">3 matching trains</b> = Mini/Major/Grand
+  </div>
+
+  <div id="banner" class="hidden banner shrink-0 mb-0.5"><span id="ban-txt">HOLD & SPIN</span> · <span id="ban-cnt">3</span> LEFT</div>
+
+  <div id="reels-area">
+    <div class="reels-box" id="theme">
+      <div id="grid" class="grid5"></div>
+      <canvas id="reel-confetti"></canvas>
+    </div>
+  </div>
+
+  <div id="train-area" class="hidden flex-1 flex flex-col items-center justify-center min-h-0">
+    <div class="text-sm font-black text-pink-400 mb-1">🚂 MYTHIC EXPRESS BOARD</div>
+    <div class="text-[9px] text-gray-400 mb-1">Land fireballs · Fill all 8 for Fortune bonus</div>
+    <div id="tgrid" class="grid grid-cols-4 gap-1.5 w-full max-w-[340px]"></div>
+  </div>
+
+  <div id="win-pause" class="shrink-0">PRESS SPIN TO CONTINUE</div>
+  <div class="text-center shrink-0 my-1">
+    <div class="inline-block meter px-5 py-1" style="border:2px solid #00ff88;box-shadow:0 0 12px rgba(0,255,136,.35)">
+      <span class="text-[10px] text-gray-400 mr-1">WIN</span>
+      <span class="text-2xl font-black text-green-400">$<span id="win">0</span></span>
+    </div>
+  </div>
+
+  <!-- Compact controls -->
+  <div class="shrink-0 flex flex-wrap items-center justify-center gap-1 text-[9px] mb-1 px-1">
+    <span class="text-gray-500 shrink-0">BET</span>
+    <div id="bet-row" class="flex flex-wrap gap-0.5"></div>
+    <span class="text-gray-500 shrink-0 ml-1">×</span>
+    <div id="mul-row" class="flex flex-wrap gap-0.5"></div>
+    <div class="meter ml-1 shrink-0">$<span id="tot" class="font-bold text-yellow-300">50</span></div>
+  </div>
+  <div class="shrink-0 flex justify-center items-center gap-2 pb-2">
+    <button id="btn-spin" class="btn btn-spin"><i class="fas fa-sync-alt mr-1"></i>SPIN</button>
+    <button id="btn-auto" class="btn btn-auto btn-sm"><i class="fas fa-redo"></i> AUTO</button>
+  </div>
+</div>
+
+<div id="m-opt" class="fixed inset-0 z-50 hidden modal-bg flex items-center justify-center p-4">
+  <div class="bg-gray-900 border-2 border-yellow-500 rounded-xl p-5 max-w-xs w-full">
+    <h3 class="text-base font-bold text-yellow-400 mb-3"><i class="fas fa-cog"></i> Options</h3>
+    <div class="space-y-3 text-sm">
+      <div class="flex justify-between items-center"><span>Sound</span><button id="opt-snd" class="btn btn-toggle active">ON</button></div>
+      <div><div class="mb-1 text-xs text-gray-400">Spin Speed</div>
+        <div class="flex gap-2">
+          <button class="btn btn-toggle opt-spd active" data-v="real">REAL</button>
+          <button class="btn btn-toggle opt-spd" data-v="fast">FAST</button>
+        </div>
+      </div>
+      <div><div class="mb-1 text-xs text-gray-400">Auto Spins</div>
+        <div class="flex flex-wrap gap-1">
+          <button class="btn btn-toggle opt-auto" data-v="10">10</button>
+          <button class="btn btn-toggle opt-auto active" data-v="40">40</button>
+          <button class="btn btn-toggle opt-auto" data-v="100">100</button>
+          <button class="btn btn-toggle opt-auto" data-v="0">∞</button>
+        </div>
+      </div>
+      <p class="text-[10px] text-gray-400">3 Bolt Trains in Hold & Spin = Mini/Major/Grand. ∞ = auto until you stop.</p>
+    </div>
+    <button id="opt-close" class="btn w-full mt-3">CLOSE</button>
+  </div>
+</div>
+
+<div id="m-daily" class="fixed inset-0 z-50 hidden modal-bg flex items-center justify-center p-4">
+  <div class="bg-gray-900 border-2 border-yellow-500 rounded-xl p-5 max-w-xs w-full text-center">
+    <div class="text-3xl mb-1">🎁</div>
+    <div class="font-bold text-yellow-400 mb-1">Daily Bonus</div>
+    <div id="d-msg" class="text-xs text-gray-300 mb-2"></div>
+    <div id="d-ok" class="hidden"><div class="text-xl font-black text-yellow-300">+$8,000</div><div class="text-sm text-blue-300 mb-2">+80 XP</div><button id="d-claim" class="btn w-full">CLAIM</button></div>
+    <div id="d-wait" class="hidden"><div id="d-tmr" class="text-lg font-mono text-cyan-300 mb-2">00:00:00</div><button id="d-close" class="btn w-full opacity-80">Close</button></div>
+  </div>
+</div>
+
+<div id="m-lvl" class="fixed inset-0 z-50 hidden modal-bg flex items-center justify-center p-4">
+  <div class="bg-indigo-950 border-2 border-cyan-400 rounded-xl p-5 max-w-xs w-full text-center">
+    <div class="text-xl font-black text-cyan-300">LEVEL UP!</div>
+    <div class="mt-1">Level <span id="l-num">2</span></div>
+    <div class="text-yellow-300 font-bold my-2">+ $<span id="l-cash">5000</span></div>
+    <div id="l-unl" class="text-xs text-green-300 mb-2"></div>
+    <button id="l-close" class="btn w-full">CONTINUE</button>
+  </div>
+</div>
+
+<div id="m-feat" class="fixed inset-0 z-50 hidden modal-bg flex items-center justify-center p-4">
+  <div class="bg-purple-950 border-2 border-pink-500 rounded-xl p-5 max-w-sm w-full text-center">
+    <div id="f-icon" class="text-4xl mb-1"></div>
+    <div id="f-title" class="text-lg font-black text-pink-400 mb-1"></div>
+    <div id="f-body" class="text-xs text-gray-200 mb-3 whitespace-pre-line"></div>
+    <button id="f-close" class="btn w-full">CONTINUE</button>
+  </div>
+</div>
+
+<div id="m-cashtrain" class="fixed inset-0 z-50 hidden modal-bg flex items-center justify-center p-4">
+  <div class="bg-pink-950 border-2 border-pink-400 rounded-xl p-5 max-w-sm w-full text-center">
+    <div class="text-3xl mb-1">🚂</div>
+    <div class="text-lg font-black text-pink-300 mb-1">BOLT TRAIN!</div>
+    <div id="ct-tier" class="text-sm text-yellow-300 font-bold mb-1">FREE HOLD & SPIN</div>
+    <div id="ct-amt" class="text-xs text-yellow-200 mb-2">3 matching trains = Mini / Major / Grand</div>
+    <div class="text-xs text-gray-300 mb-3">No match? You still win the MINI train prize.<br>Orbs pay their cash values as usual.</div>
+    <button id="ct-go" class="btn w-full">START HOLD & SPIN</button>
+  </div>
+</div>
+
+<div id="m-toast" class="fixed inset-0 z-[60] hidden modal-bg flex items-center justify-center p-4">
+  <div class="bg-gray-900 border-2 border-yellow-500 rounded-xl p-5 max-w-xs w-full text-center">
+    <div id="toast-title" class="text-base font-black text-yellow-400 mb-1"></div>
+    <div id="toast-body" class="text-xs text-gray-300 mb-3"></div>
+    <button id="toast-ok" class="btn w-full">OK</button>
+  </div>
+</div>
+
+<div id="m-help" class="fixed inset-0 z-50 hidden modal-bg flex items-center justify-center p-4">
+  <div class="bg-gray-900 border-2 border-cyan-400 rounded-xl p-5 max-w-md w-full max-h-[90vh] overflow-y-auto">
+    <h3 class="text-lg font-black text-cyan-300 mb-2 text-center">⚡ HOW TO PLAY</h3>
+    <div class="text-[11px] text-gray-300 space-y-2 leading-relaxed">
+      <p><b class="text-yellow-400">Line wins</b> — Match 3+ symbols left to right on a payline. Higher symbols pay more.</p>
+      <p><b class="text-yellow-400">Hold & Spin</b> — Land <b>6+ orbs</b>. Orbs lock, you get 3 respins. New orb resets to 3. Fill all 15 for <b>GRAND</b>.</p>
+      <p><b class="text-green-400">Free Games</b> — Land <b>3+ scatters</b> (each machine’s feature picture). Spins play automatically. More scatters during Free Games <b>stack</b> extra spins.</p>
+      <p><b class="text-pink-400">🚂 Bolt Train</b> <span class="text-gray-500">(all machines)</span> — Rare random feature. Free Hold & Spin. Collect <b>3 matching</b> train tiers (MINI / MAJOR / GRAND) to win that pot. No match → Mini consolation.</p>
+      <p><b class="text-purple-300">🚂 Mythic Express Board</b> <span class="text-gray-500">(Mythic Express machine only)</span> — During Hold & Spin, a special train can open an 8-cell board. Land fireballs; fill all 8 for a Fortune bonus.</p>
+      <p><b class="text-cyan-300">Reward Wheel</b> — Earn 1 token per paid spin. 25 tokens = 1 spin. Prize wheel then 1×–5× multiplier.</p>
+      <p><b class="text-cyan-300">Level up</b> — Unlock machines up to Level 100. Higher bets earn more XP (with more risk).</p>
+      <p class="text-gray-500 pt-1">Virtual play only · Progress saves in this browser · Tap SPIN to skip big-win animations</p>
+    </div>
+    <button id="help-close" class="btn w-full mt-3">GOT IT</button>
+  </div>
+</div>
+
+<div id="m-wheel" class="fixed inset-0 z-50 hidden modal-bg flex items-center justify-center p-4">
+  <div class="bg-gray-900 border-2 border-cyan-400 rounded-xl p-5 max-w-sm w-full text-center">
+    <div class="text-lg font-black text-cyan-300 mb-1"><i class="fas fa-dharmachakra"></i> REWARD WHEEL</div>
+    <div class="text-[10px] text-gray-400 mb-2">Earn 1 token every spin · 25 tokens = 1 spin</div>
+    <div class="flex justify-center gap-3 mb-2 text-xs">
+      <div class="meter">Tokens <span id="wh-tokens" class="text-cyan-300 font-bold">0</span></div>
+      <div class="meter">Spins left <span id="wh-spins" class="text-yellow-300 font-bold">0</span></div>
+    </div>
+    <div class="relative mx-auto my-2" style="width:220px;height:220px">
+      <canvas id="wheel-canvas" width="220" height="220"></canvas>
+    </div>
+    <div class="text-[10px] text-gray-400 mb-1">Multiplier</div>
+    <div class="relative mx-auto mb-2" style="width:160px;height:160px">
+      <canvas id="mult-canvas" width="160" height="160"></canvas>
+    </div>
+    <div id="wh-result" class="text-sm font-bold text-yellow-300 min-h-[1.4rem] mb-2"></div>
+    <button id="wh-spin" class="btn w-full mb-2">SPIN WHEEL (25 tokens)</button>
+    <button id="wh-close" class="btn w-full opacity-80">CLOSE</button>
+  </div>
+</div>
+
+<script>
+/* =============================================================================
+   BOLT SPIN – Feel-good polish
+   - More frequent small line wins
+   - Hold & Spin tuned as loss-recovery feature
+   - Per-machine Free Games (unique feature + icon)
+   - Coin rain on big wins (tap/spin to skip)
+   - Richer sounds
+   ============================================================================= */
+
+const MACHINES = [
+  {id:'magic-pearl',name:'Coral Pearl',unlock:1,css:'pearl',orb:'🦪',train:null,scat:'🐬',wild:'🧜‍♀️',high:['🐢','🐙','⭐','💎'],mid:['🐟','🐚'],low:['A','K','Q','J','10'],jpBase:{g:5000,j:1000,n:250,m:50},hasTrain:false,fs:10,
+    featIcon:'🐬',featName:'FREE GAMES',featDesc:'3× Dolphins trigger Free Games\nPearl Wilds pay 2× on line wins'},
+  {id:'happy-lantern',name:'Lucky Lantern',unlock:8,css:'lantern',orb:'🏮',train:null,scat:'🧧',wild:'🐲',high:['🐉','🏯','⭐','💎'],mid:['🎋','🍊'],low:['A','K','Q','J','10'],jpBase:{g:8000,j:1500,n:400,m:80},hasTrain:false,fs:10,
+    featIcon:'🧧',featName:'FREE GAMES',featDesc:'3× Red Packets trigger Free Games\nLucky Lanterns: random 2×–5× on wins'},
+  {id:'sahara-gold',name:'Desert Gold',unlock:16,css:'sahara',orb:'🪙',train:null,scat:'🏺',wild:'🐪',high:['🐍','🕌','⭐','💎'],mid:['🌵','☀️'],low:['A','K','Q','J','10'],jpBase:{g:12000,j:2000,n:500,m:100},hasTrain:false,fs:10,
+    featIcon:'🏺',featName:'FREE GAMES',featDesc:'3× Urns trigger Free Games\nDesert Mystery boosts high symbols'},
+  {id:'tiki-fire',name:'Island Fire',unlock:25,css:'tiki',orb:'🔥',train:null,scat:'🌋',wild:'🌺',high:['🦜','🦋','⭐','💎'],mid:['🌴','🍹'],low:['A','K','Q','J','10'],jpBase:{g:15000,j:2500,n:600,m:120},hasTrain:false,fs:10,
+    featIcon:'🌋',featName:'FREE GAMES',featDesc:'3× Volcanoes trigger Free Games\nFire Multipliers 2×–4× every win'},
+  {id:'dragon-train',name:'Mythic Express',unlock:35,css:'train',orb:'🔮',train:'🚂',scat:'🐉',wild:'🏯',high:['🐲','⚡','⭐','💎'],mid:['🏮','🔥'],low:['A','K','Q','J','10'],jpBase:{g:25000,j:4000,n:800,m:150},hasTrain:true,fs:10,
+    featIcon:'🐉',featName:'FREE GAMES',featDesc:'3× Dragons trigger Free Games\nExtra orbs · Mythic Express Board'},
+  {id:'heart-throb',name:'Heart Beat',unlock:48,css:'heart',orb:'💖',train:null,scat:'🌙',wild:'💘',high:['💝','🌹','⭐','💎'],mid:['💌','🥂'],low:['A','K','Q','J','10'],jpBase:{g:22000,j:3500,n:700,m:140},hasTrain:false,fs:10,
+    featIcon:'🌙',featName:'FREE GAMES',featDesc:'3× Moons trigger Free Games\nHeart Multipliers 2×–3× on wins'},
+  {id:'high-stakes',name:'High Roller',unlock:60,css:'stakes',orb:'🎰',train:null,scat:'💼',wild:'🎲',high:['🚗','🤵','⭐','💎'],mid:['🃏','🍸'],low:['A','K','Q','J','10'],jpBase:{g:35000,j:5000,n:1000,m:200},hasTrain:false,fs:10,
+    featIcon:'💼',featName:'FREE GAMES',featDesc:'3× Briefcases trigger Free Games\nHigh Roller: all wins doubled'},
+  {id:'lightning-buffalo',name:'Storm Buffalo',unlock:72,css:'buffalo',orb:'🦬',train:null,scat:'🪶',wild:'🤠',high:['🦅','⛰️','⭐','💎'],mid:['🌵','🔥'],low:['A','K','Q','J','10'],jpBase:{g:40000,j:6000,n:1200,m:250},hasTrain:false,fs:12,
+    featIcon:'🪶',featName:'FREE GAMES',featDesc:'3× Feathers trigger Free Games\nStampede: extra wilds on the reels'},
+  {id:'moon-race',name:'Lunar Rush',unlock:85,css:'moon',orb:'🌕',train:null,scat:'🚀',wild:'👽',high:['🛸','🌟','⭐','💎'],mid:['🪐','🌙'],low:['A','K','Q','J','10'],jpBase:{g:50000,j:8000,n:1500,m:300},hasTrain:false,fs:12,
+    featIcon:'🚀',featName:'FREE GAMES',featDesc:'3× Rockets trigger Free Games\nLow pays removed from the reels'},
+  {id:"dragons-riches",name:"Jade Dragon",unlock:100,css:'dragon',orb:'🧧',train:null,scat:'🐉',wild:'🔥',high:['🐲','🏯','⭐','💎'],mid:['🎋','🏮'],low:['A','K','Q','J','10'],jpBase:{g:75000,j:10000,n:2000,m:400},hasTrain:false,fs:12,
+    featIcon:'🐉',featName:'FREE GAMES',featDesc:'3× Dragons trigger Free Games\nExpanding Wilds boost line wins'}
+];
+
+const BET_AMOUNTS = [1,2,5,10,20,50,100,250,500,1000,2500,5000,10000];
+const MULS = [1,2,3,4,5,6,7,8,9,10];
+const XP_BASE = 500;
+const CT_BASE = {m:200,j:1500,g:8000};
+
+let S = {
+  bal:35000, lvl:1, xp:0, unlocked:['magic-pearl'],
+  lastDaily:0, sound:true, speed:'real',
+  mach:null, betI:4, mulI:0,
+  spinning:false, auto:false, autoN:0,
+  mode:'base',
+  hold:null, respins:0, holdWin:0, hasTrain:false,
+  tGrid:null, tRes:0, tWin:0,
+  freeLeft:0, freeWin:0,
+  savedFreeLeft:0, savedFreeWin:0, fromFree:false,
+  jps:{}, ct:{m:200,j:1500,g:8000},
+  cashTrainPrize:0, winPause:false, modalBlock:false,
+  coinRaining:false, trainJackpotPaid:false,
+  fromBoltTrain:false, autoLimit:40,
+  tokens:0, wheelBusy:false, tickering:false
+};
+
+/* ---------- Audio (richer) ---------- */
+let ac=null;
+function ea(){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume()}
+function tn(f,t,d,v=0.08){if(!S.sound)return;ea();const o=ac.createOscillator(),g=ac.createGain();o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+d);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d)}
+/* Per-machine pitch shift so each cabinet feels unique */
+function mPitch(){
+  if(!S.mach)return 0;
+  const map={pearl:0,lantern:40,sahara:25,tiki:-20,train:60,heart:80,stakes:-30,buffalo:-40,moon:50,dragon:30};
+  return map[S.mach.css]||0;
+}
+function click(){tn(720+mPitch(),'square',0.03,0.04)}
+function spinS(){if(!S.sound)return;const p=mPitch();for(let i=0;i<6;i++)setTimeout(()=>tn(90+p+Math.random()*80,'sawtooth',0.05,0.018),i*55)}
+function stopS(){const p=mPitch();tn(180+p,'triangle',0.06,0.05);tn(320+p,'sine',0.04,0.03)}
+function lockS(){const p=mPitch();tn(500+p,'triangle',0.09,0.07);tn(750+p,'sine',0.11,0.045)}
+function winS(b){
+  const p=mPitch();
+  const n=b?[392,523,659,784,1046,1318,1568,2093]:[523,659,784,988];
+  n.forEach((x,i)=>setTimeout(()=>{tn(x+p,'sine',0.16,0.09);if(b)tn(x+p*0.5,'triangle',0.12,0.04)},i*48));
+  if(b)setTimeout(()=>coinDropS(),180);
+}
+function jackS(){
+  [262,330,392,523,659,784,1046,1318,1568,2093].forEach((x,i)=>setTimeout(()=>{
+    tn(x,'triangle',0.28,0.12);tn(x*1.5,'sine',0.2,0.06);
+  },i*70));
+  setTimeout(()=>coinDropS(),400);
+}
+function cashS(){[380,550,800,1100,1400,1800,2200].forEach((x,i)=>setTimeout(()=>tn(x,'square',0.16,0.1),i*55))}
+function coinDropS(){
+  if(!S.sound)return;
+  for(let i=0;i<14;i++)setTimeout(()=>tn(700+Math.random()*900,'sine',0.1,0.055),i*35);
+}
+function scatS(){if(!S.sound)return;const p=mPitch();tn(660+p,'sine',0.15,0.1);tn(880+p,'triangle',0.2,0.07)}
+function drumRoll(){
+  if(!S.sound)return;ea();
+  for(let i=0;i<18;i++)setTimeout(()=>{
+    tn(80+Math.random()*40,'square',0.04,0.04+i*0.003);
+  },i*55);
+}
+function trainHorn(){
+  if(!S.sound)return;ea();
+  const now=ac.currentTime;
+  [[180,0],[220,0.12],[160,0.28],[240,0.4]].forEach(([f,off])=>{
+    const o=ac.createOscillator(),g=ac.createGain();
+    o.type='sawtooth';o.frequency.value=f;
+    g.gain.setValueAtTime(0.001,now+off);
+    g.gain.linearRampToValueAtTime(0.12,now+off+0.05);
+    g.gain.exponentialRampToValueAtTime(0.001,now+off+0.35);
+    o.connect(g);g.connect(ac.destination);
+    o.start(now+off);o.stop(now+off+0.4);
+  });
+  setTimeout(()=>{tn(1200,'sine',0.3,0.1);tn(1600,'sine',0.2,0.06)},450);
+}
+
+function save(){
+  localStorage.setItem('ll_v19',JSON.stringify({
+    bal:S.bal,lvl:S.lvl,xp:S.xp,unlocked:S.unlocked,
+    lastDaily:S.lastDaily,sound:S.sound,speed:S.speed,jps:S.jps,ct:S.ct,autoLimit:S.autoLimit,tokens:S.tokens
+  }));
+}
+function load(){
+  try{
+    const r=localStorage.getItem('ll_v19')||localStorage.getItem('ll_v10')||localStorage.getItem('ll_v8')||localStorage.getItem('ll_v7');
+    if(!r){initJPs();rebuildUnlocks();return}
+    const d=JSON.parse(r);
+    S.bal=d.bal??35000;S.lvl=d.lvl??1;S.xp=d.xp??0;
+    S.lastDaily=d.lastDaily??0;S.sound=d.sound??true;S.speed=d.speed??'real';
+    S.jps=d.jps||{};S.ct=d.ct||{...CT_BASE};S.autoLimit=d.autoLimit??40;S.tokens=d.tokens??0;
+    if(!S.ct.m)S.ct={...CT_BASE};
+    initJPs();rebuildUnlocks();
+  }catch(e){initJPs();rebuildUnlocks()}
+}
+function initJPs(){MACHINES.forEach(m=>{if(!S.jps[m.id])S.jps[m.id]={g:m.jpBase.g,j:m.jpBase.j,n:m.jpBase.n,m:m.jpBase.m}})}
+function rebuildUnlocks(){
+  S.unlocked=['magic-pearl'];
+  MACHINES.forEach(m=>{if(S.lvl>=m.unlock&&!S.unlocked.includes(m.id))S.unlocked.push(m.id)});
+}
+
+const fmt=n=>{
+  const v=Math.round((Number(n)||0)*100)/100;
+  return v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+};
+const cents=n=>Math.round((Number(n)||0)*100)/100;
+function total(){return BET_AMOUNTS[Math.min(S.betI,BET_AMOUNTS.length-1)]*MULS[Math.min(S.mulI,MULS.length-1)]}
+function need(l){return Math.floor(XP_BASE*Math.pow(1.22,l-1))}
+function curJP(){return S.mach?S.jps[S.mach.id]:{g:5000,j:1000,n:250,m:50}}
+
+function addXP(a){
+  S.xp+=a;
+  while(S.xp>=need(S.lvl)){
+    S.xp-=need(S.lvl);S.lvl++;
+    const bonus=4000+S.lvl*1000;S.bal+=bonus;
+    const newly=[];
+    MACHINES.forEach(m=>{if(S.lvl>=m.unlock&&!S.unlocked.includes(m.id)){S.unlocked.push(m.id);newly.push(m.name)}});
+    document.getElementById('l-num').textContent=S.lvl;
+    document.getElementById('l-cash').textContent=fmt(bonus);
+    document.getElementById('l-unl').textContent=newly.length?'Unlocked: '+newly.join(', '):'Keep spinning!';
+    openModal('m-lvl');confettiBurst(true);
+  }
+}
+
+function grow(){
+  const t=total();
+  if(S.mach){const jp=S.jps[S.mach.id];jp.m+=t*0.003;jp.n+=t*0.008;jp.j+=t*0.02;jp.g+=t*0.05}
+  S.ct.m+=t*0.004;S.ct.j+=t*0.015;S.ct.g+=t*0.04;
+  updJP();
+}
+function updJP(){
+  const jp=curJP();
+  document.getElementById('jp-g').textContent=fmt(jp.g);
+  document.getElementById('jp-j').textContent=fmt(jp.j);
+  document.getElementById('jp-n').textContent=fmt(jp.n);
+  document.getElementById('jp-m').textContent=fmt(jp.m);
+  ['lobby-ct-m','g-ct-m'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=fmt(S.ct.m)});
+  ['lobby-ct-j','g-ct-j'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=fmt(S.ct.j)});
+  ['lobby-ct-g','g-ct-g'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=fmt(S.ct.g)});
+}
+
+function openModal(id){S.modalBlock=true;document.getElementById(id).classList.remove('hidden')}
+function closeModal(id){
+  document.getElementById(id).classList.add('hidden');
+  S.modalBlock=['m-feat','m-lvl','m-cashtrain','m-daily','m-opt','m-wheel','m-toast','m-help'].some(m=>!document.getElementById(m).classList.contains('hidden'));
+  tryResumeAuto();
+}
+function tryResumeAuto(){
+  if(S.modalBlock||S.winPause||S.spinning||S.coinRaining)return;
+  if(S.mode==='free'&&S.freeLeft>0){setTimeout(()=>doSpin(),500);return}
+  if(S.auto&&S.mode==='base'&&(S.autoLimit===0||S.autoN>0)){
+    if(S.autoLimit!==0){S.autoN--;if(S.autoN<=0)S.auto=false}
+    ui();if(S.auto)setTimeout(()=>doSpin(),650);
+  }
+}
+
+function ui(){
+  document.getElementById('lobby-bal').textContent=fmt(S.bal);
+  document.getElementById('g-bal').textContent=fmt(S.bal);
+  document.getElementById('lobby-lvl').textContent=S.lvl;
+  document.getElementById('g-lvl').textContent=S.lvl;
+  const tokEl=document.getElementById('lobby-tokens');if(tokEl)tokEl.textContent=S.tokens|0;
+  const gTok=document.getElementById('g-tokens');if(gTok)gTok.textContent=S.tokens|0;
+  const n=need(S.lvl);
+  document.getElementById('xp-lbl').textContent=S.xp+'/'+n;
+  document.getElementById('xp-bar').style.width=Math.min(100,S.xp/n*100)+'%';
+  document.getElementById('g-xp-txt').textContent=S.xp+'/'+n;
+  document.getElementById('g-xp-bar').style.width=Math.min(100,S.xp/n*100)+'%';
+  document.getElementById('snd-ico').className=S.sound?'fas fa-volume-up':'fas fa-volume-mute';
+  document.getElementById('btn-auto').classList.toggle('active',S.auto);
+  const autoLbl=S.autoLimit===0?'∞':S.autoN;
+  document.getElementById('btn-auto').innerHTML=S.auto?`<i class="fas fa-stop"></i> ${autoLbl}`:`<i class="fas fa-redo"></i> AUTO`;
+  document.querySelectorAll('.opt-auto').forEach(b=>b.classList.toggle('active',parseInt(b.dataset.v,10)===S.autoLimit));
+  document.getElementById('tot').textContent=fmt(total());
+
+  const br=document.getElementById('bet-row');br.innerHTML='';
+  BET_AMOUNTS.forEach((b,i)=>{
+    const btn=document.createElement('button');
+    btn.className='btn btn-opt'+(i===S.betI?' active':'');
+    btn.textContent=b>=1000?(b/1000)+'k':b;
+    btn.onclick=()=>{if(S.spinning||S.winPause||S.modalBlock||S.coinRaining||(S.mode!=='base'&&S.mode!=='free'))return;S.betI=i;ui();click()};
+    br.appendChild(btn);
+  });
+  const mr=document.getElementById('mul-row');mr.innerHTML='';
+  MULS.forEach((m,i)=>{
+    const btn=document.createElement('button');
+    btn.className='btn btn-opt'+(i===S.mulI?' active':'');
+    btn.textContent=m+'×';
+    btn.onclick=()=>{if(S.spinning||S.winPause||S.modalBlock||S.coinRaining||(S.mode!=='base'&&S.mode!=='free'))return;S.mulI=i;ui();click()};
+    mr.appendChild(btn);
+  });
+
+  if(!S.unlocked||!S.unlocked.length)S.unlocked=['magic-pearl'];
+  const list=document.getElementById('mach-list');
+  if(list){
+    list.innerHTML='';
+    MACHINES.forEach(m=>{
+      const un=S.unlocked.includes(m.id);
+      const jp=S.jps[m.id]||m.jpBase;
+      const card=document.createElement('div');
+      card.className='card c-'+m.css+(un?'':' locked');
+      card.innerHTML=
+        '<div class="flex justify-between items-start gap-1"><div class="font-black text-xs leading-tight '+(un?'text-yellow-400':'text-gray-500')+'">'+m.name+'</div>'+
+        (un?'':'<i class="fas fa-lock text-gray-500 text-[10px] shrink-0"></i>')+'</div>'+
+        '<div class="text-2xl text-center my-1">'+m.orb+(m.train?' '+m.train:'')+'</div>'+
+        '<div class="text-center text-[9px] min-h-[2.4rem] flex flex-col justify-end">'+
+        (un
+          ? '<div class="text-cyan-300/80">'+m.featIcon+' '+m.featName+'</div><div class="text-yellow-300/90 font-bold">GRAND $'+fmt(jp.g)+'</div><div class="text-green-400 font-bold">PLAY</div>'
+          : '<div class="text-gray-500">Unlocks at Level '+m.unlock+'</div><div class="text-gray-600 text-[8px] mt-0.5">Keep spinning to level up</div>')+
+        '</div>';
+      if(un)card.onclick=()=>enter(m);
+      list.appendChild(card);
+    });
+  }
+  document.getElementById('opt-snd').textContent=S.sound?'ON':'OFF';
+  document.getElementById('opt-snd').classList.toggle('active',S.sound);
+  document.querySelectorAll('.opt-spd').forEach(b=>b.classList.toggle('active',b.dataset.v===S.speed));
+  updJP();
+}
+
+/* ---------- Symbol gen – more line hits ---------- */
+function pool(m,freeMode){
+  // Moon Race free: no lows
+  if(freeMode&&m.id==='moon-race')return[...m.high,...m.mid,m.wild,m.wild];
+  // Buffalo free: extra wilds
+  if(freeMode&&m.id==='lightning-buffalo')return[...m.high,...m.mid,...m.low,m.wild,m.wild,m.wild];
+  // Base: weight toward mid/high slightly for more line action
+  return[...m.high,...m.high,...m.mid,...m.mid,...m.mid,...m.low,...m.low,m.wild];
+}
+function makeOrb(m,forceTrain){
+  const jp=curJP();
+  if(m.hasTrain&&(forceTrain||Math.random()<0.035))return{t:'train',e:m.train,v:0,l:'TRAIN',tier:null};
+  const r=Math.random();let v,l;
+  if(r<0.008){v=cents(jp.j);l='MAJOR'}
+  else if(r<0.025){v=cents(jp.n);l='MINOR'}
+  else if(r<0.055){v=cents(jp.m);l='MINI'}
+  else{
+    // Hold recovery values — typically under ~2.5× bet
+    const ms=[0.2,0.3,0.4,0.5,0.5,0.75,1,1,1.25,1.5,2,2.5];
+    const base=ms[Math.floor(Math.random()*ms.length)]*total();
+    v=cents(base*(0.9+Math.random()*0.2));
+    l='$'+fmt(v);
+  }
+  return{t:'orb',e:m.orb,v,l};
+}
+function makeSym(m){
+  const free=S.mode==='free';
+  const r=Math.random();
+  // Slightly more orbs on Mythic Express free games
+  const orbChance=free&&m.id==='dragon-train'?0.08:0.04;
+  if(r<orbChance)return makeOrb(m);
+  if(r<orbChance+0.032)return{t:'scat',e:m.scat,v:0,l:''}; // scatters more common than Bolt Train
+  // Weighted reel: encourage matching by biasing first-of-path style later in eval
+  const p=pool(m,free);
+  return{t:'n',e:p[Math.floor(Math.random()*p.length)],v:0,l:''};
+}
+function holdSym(m){
+  // ~16% land rate
+  if(Math.random()>=0.16)return{t:'e',e:'',v:0,l:''};
+  // ~8% Bolt Trains — need 3 matching tiers for pot
+  if(Math.random()<0.08){
+    const r=Math.random();
+    let tier;
+    if(r<0.08)tier='GRAND';
+    else if(r<0.30)tier='MAJOR';
+    else tier='MINI';
+    return{t:'train',e:'🚂',v:0,l:'TR-'+tier,tier:tier};
+  }
+  return makeOrb(m);
+}
+function fireball(){
+  if(Math.random()<0.22){
+    const ms=[0.5,0.75,1,1,1.5,2,2.5,3];
+    const mu=ms[Math.floor(Math.random()*ms.length)];
+    return{t:'fire',e:'🔥',v:cents(mu*total()*(0.9+Math.random()*0.2)),l:'$'+fmt(mu*total())};
+  }
+  return{t:'e',e:'',v:0,l:''};
+}
+
+function cell(el,s){
+  el.className='cell';
+  if(s.t==='orb'){el.classList.add('orb');el.innerHTML=s.e+'<span class="tag'+(['MINI','MINOR','MAJOR'].includes(s.l)?' jtag':'')+'">'+s.l+'</span>'}
+  else if(s.t==='train'){
+    el.classList.add('train');
+    const lab=s.l&&s.l.startsWith('TR-')?s.l.replace('TR-',''):'TRAIN';
+    el.innerHTML=s.e+'<span class="tag" style="color:#ff66cc">'+lab+'</span>';
+  }
+  else if(s.t==='fire'){el.classList.add('orb');el.innerHTML=s.e+'<span class="tag">'+s.l+'</span>'}
+  else if(s.t==='scat'){el.classList.add('scat');el.textContent=s.e}
+  else el.textContent=s.e||'';
+}
+function emptyGrid(){
+  const g=document.getElementById('grid');g.innerHTML='';
+  for(let i=0;i<15;i++){const c=document.createElement('div');c.className='cell';c.textContent='·';g.appendChild(c)}
+}
+
+function enter(m){
+  S.mach=m;S.mode='base';S.auto=false;S.hold=null;S.freeLeft=0;
+  S.cashTrainPrize=0;S.winPause=false;S.fromFree=false;S.fromBoltTrain=false;
+  S.modalBlock=false;S.coinRaining=false;S.tickering=false;S.trainJackpotPaid=false;
+  stopWinTicker();
+  document.getElementById('win-ticker').classList.remove('show');
+  document.getElementById('lobby').classList.add('hidden');
+  document.getElementById('game').classList.remove('hidden');
+  document.getElementById('reels-area').classList.remove('hidden');
+  document.getElementById('train-area').classList.add('hidden');
+  document.getElementById('banner').classList.add('hidden');
+  document.getElementById('win-pause').classList.remove('show');
+  document.getElementById('coin-rain').classList.remove('show');
+  document.getElementById('g-name').textContent=m.name;
+  document.getElementById('win').textContent='0';
+  document.getElementById('theme').className='reels-box theme-'+m.css;
+  emptyGrid();ui();click();
+}
+
+async function doSpin(){
+  if(S.spinning||S.modalBlock)return;
+  // Skip coin rain if active
+  if(S.coinRaining){stopCoinRain()}
+  if(S.tickering){stopWinTicker()}
+  if(S.winPause){
+    S.winPause=false;
+    document.getElementById('win-pause').classList.remove('show');
+    const g=document.getElementById('grid');
+    if(g)for(let i=0;i<g.children.length;i++)g.children[i].classList.remove('win');
+    if(S.auto&&S.mode==='base'&&(S.autoLimit===0||S.autoN>0)){await delay(250)}
+    else return;
+  }
+  if(S.mode==='base'){
+    const t=total();
+    if(S.bal<t){S.auto=false;toast('Not enough credits','Try a lower bet');ui();return}
+    S.bal-=t;grow();
+    // Higher bets earn more XP (capped) — risk vs reward for faster unlocks
+    addXP(1+Math.min(6,Math.floor(Math.log10(Math.max(10,t)))));
+    S.tokens=(S.tokens|0)+1; // 1 wheel token per paid spin
+  }
+  S.spinning=true;document.getElementById('win').textContent='0';ui();save();
+  try{
+    if(S.mode==='base'||S.mode==='free')await baseSpin();
+    else if(S.mode==='hold')await holdSpin();
+    else if(S.mode==='train')await trainSpin();
+  }catch(e){
+    console.error(e);S.mode='base';S.hold=null;S.fromFree=false;
+    document.getElementById('banner').classList.add('hidden');
+    document.getElementById('train-area').classList.add('hidden');
+    document.getElementById('reels-area').classList.remove('hidden');
+  }
+  S.spinning=false;ui();save();
+  if(S.modalBlock||S.winPause||S.coinRaining)return;
+  if(S.mode==='free'&&S.freeLeft>0){setTimeout(()=>doSpin(),700);return}
+  if(S.auto&&S.mode==='base'&&(S.autoLimit===0||S.autoN>0)){
+    if(S.autoLimit!==0){S.autoN--;if(S.autoN<=0)S.auto=false}
+    ui();if(S.auto)setTimeout(()=>doSpin(),800);
+  }
+}
+function delay(ms){return new Promise(r=>setTimeout(r,ms))}
+
+async function spinReels(finalSyms){
+  const m=S.mach;const g=document.getElementById('grid');
+  const sp=S.speed==='real'?1:0.45;
+  spinS();
+  for(let i=0;i<15;i++)g.children[i].classList.add('spinning');
+  const anim=setInterval(()=>{
+    for(let col=0;col<5;col++)for(let row=0;row<3;row++){
+      const i=col*3+row;
+      if(g.children[i].classList.contains('spinning')){cell(g.children[i],makeSym(m));g.children[i].classList.add('spinning')}
+    }
+  },42);
+  let scatSoFar=0;
+  for(let col=0;col<5;col++){
+    // Anticipation: after 2 scatters, remaining reels spin longer + drum roll
+    let wait=col===0?520*sp:280*sp+Math.random()*60*sp;
+    if(scatSoFar>=2&&col>=2){
+      if(col===2||(scatSoFar===2&&col===3))drumRoll();
+      wait=(700+col*180)*sp;
+    }
+    await delay(wait);
+    for(let row=0;row<3;row++){
+      const i=col*3+row;
+      g.children[i].classList.remove('spinning');
+      cell(g.children[i],finalSyms[i]);
+      g.children[i].classList.add('land');
+      setTimeout(()=>g.children[i].classList.remove('land'),280);
+      if(finalSyms[i].t==='scat'){
+        scatSoFar++;
+        g.children[i].classList.add('scat-hot');
+        scatS();
+      }
+    }
+    stopS();
+  }
+  clearInterval(anim);await delay(scatSoFar>=3?350:80);
+}
+
+/* Nudge final grid toward more small line wins */
+function nudgeForLines(res,m){
+  // ~28% soft nudge — keeps small hits around without flooding wins
+  if(Math.random()>0.28)return res;
+  const paths=[[0,3,6,9,12],[1,4,7,10,13],[2,5,8,11,14]];
+  const path=paths[Math.floor(Math.random()*paths.length)];
+  const commons=[...m.mid,...m.mid,...m.low];
+  const sym=commons[Math.floor(Math.random()*commons.length)];
+  for(let i=0;i<3;i++){
+    if(res[path[i]].t==='n'||res[path[i]].t==='e')res[path[i]]={t:'n',e:sym,v:0,l:''};
+  }
+  if(Math.random()<0.3&&(res[path[3]].t==='n'||res[path[3]].t==='e'))
+    res[path[3]]={t:'n',e:sym,v:0,l:''};
+  return res;
+}
+
+async function baseSpin(){
+  const m=S.mach;
+  let res=[];for(let i=0;i<15;i++)res[i]=makeSym(m);
+  if(S.mode==='base')res=nudgeForLines(res,m);
+  await spinReels(res);
+
+  let oc=0,sc=0;
+  res.forEach(s=>{if(s.t==='orb'||s.t==='train')oc++;if(s.t==='scat')sc++});
+  let lw=evalLines(res,m);
+  // Free Games machine modifiers
+  if(S.mode==='free'&&lw>0)lw=applyFreeBoost(lw,m);
+
+  if(lw>0){
+    S.bal=cents(S.bal+lw);if(S.mode==='free')S.freeWin=cents(S.freeWin+lw);
+    document.getElementById('win').textContent=fmt(lw);
+    addXP(1+Math.min(3,Math.floor(lw/total())));
+    winS(lw>=total()*3);
+    const g=document.getElementById('grid');
+    const paths=[[0,3,6,9,12],[1,4,7,10,13],[2,5,8,11,14],[0,4,8,10,12],[2,4,6,10,14]];
+    paths.forEach(p=>{
+      const f=res[p[0]];if(!f||f.t!=='n')return;
+      let len=1;
+      for(let i=1;i<5;i++){const s=res[p[i]];if(s&&s.t==='n'&&(s.e===f.e||s.e===m.wild||f.e===m.wild))len++;else break}
+      if(len>=3)for(let i=0;i<len;i++)g.children[p[i]].classList.add('win');
+    });
+    if(lw>=total()*2)reelConfetti(true);
+    // Win pause only in base game — free spins auto-continue without tapping
+    if(S.mode==='base'){
+      if(lw>=total()*5){
+        S.winPause=true;
+        document.getElementById('win-pause').classList.add('show');
+        if(lw>=total()*8){bigWin(lw)}
+      }else if(lw>=total()*2.5){
+        S.winPause=true;
+        document.getElementById('win-pause').classList.add('show');
+      }
+    }else if(S.mode==='free'&&lw>=total()*8){
+      bigWin(lw); // show overlay but don't pause free spins
+    }
+  }
+
+  if(oc>=6){
+    if(sc>=3&&S.mode==='base'){S.savedFreeLeft=m.fs+Math.max(0,sc-3)*2;S.savedFreeWin=0;S.fromFree=true}
+    S.fromBoltTrain=false;
+    await delay(250);startHold(res);return;
+  }
+  // Free Games trigger (base) or retrigger (stack more spins during free)
+  if(sc>=3){
+    if(S.mode==='base'){await delay(400);startFree(sc);return}
+    if(S.mode==='free'){
+      const extra=m.fs+Math.max(0,sc-3)*2;
+      S.freeLeft+=extra;
+      document.getElementById('ban-cnt').textContent=S.freeLeft;
+      feat('FREE GAMES RETRIGGER!','+'+extra+' Free Spins stacked!\nTotal remaining: '+S.freeLeft,m.featIcon);
+      jackS();
+    }
+  }
+
+  if(S.mode==='free'){
+    S.freeLeft--;
+    document.getElementById('ban-cnt').textContent=S.freeLeft;
+    if(S.freeLeft<=0){feat('FREE GAMES COMPLETE','You won $'+fmt(S.freeWin)+' from Free Games',m.featIcon);endFree()}
+  }
+  // Bolt Train rare (~0.25%)
+  if(S.mode==='base'&&Math.random()<0.0025)await cashTrain();
+}
+
+function applyFreeBoost(lw,m){
+  // Free Games boost lines — kept modest so features still beat base
+  let out=lw;
+  switch(m.id){
+    case 'magic-pearl': out=lw*1.25; break;
+    case 'happy-lantern': out=lw*[1.2,1.3,1.5,1.5,1.8,2][Math.floor(Math.random()*6)]; break;
+    case 'sahara-gold': out=lw*(Math.random()<0.35?1.6:1.2); break;
+    case 'tiki-fire': out=lw*[1.3,1.4,1.5,1.8,2][Math.floor(Math.random()*5)]; break;
+    case 'heart-throb': out=lw*[1.2,1.4,1.6][Math.floor(Math.random()*3)]; break;
+    case 'high-stakes': out=lw*1.5; break;
+    case 'lightning-buffalo': out=lw*1.3; break;
+    case 'moon-race': out=lw*1.35; break;
+    case 'dragon-train': out=lw*1.25; break;
+    case 'dragons-riches': out=lw*1.4; break;
+    default: out=lw;
+  }
+  return cents(out);
+}
+
+function evalLines(syms,m){
+  // Real-machine style: base lines are modest. Big money is in features.
+  // Values are × total bet (e.g. 5-oak high ≈ 2× bet — a "nice" hit, not a jackpot)
+  let tot=0;
+  const paths=[[0,3,6,9,12],[1,4,7,10,13],[2,5,8,11,14],[0,4,8,10,12],[2,4,6,10,14]];
+  const pay={h:{3:0.25,4:0.9,5:2.5},m:{3:0.12,4:0.4,5:1.0},l:{3:0.05,4:0.18,5:0.45}};
+  paths.forEach(p=>{
+    const f=syms[p[0]];if(!f||f.t!=='n')return;
+    let len=1;
+    for(let i=1;i<5;i++){
+      const s=syms[p[i]];
+      if(s&&s.t==='n'&&(s.e===f.e||s.e===m.wild||f.e===m.wild))len++;else break;
+    }
+    if(len>=3){
+      let tier='l';
+      if(m.high.includes(f.e)||f.e===m.wild)tier='h';
+      else if(m.mid.includes(f.e))tier='m';
+      tot+=(pay[tier][len]||0)*total();
+    }
+  });
+  // Rare small boost only
+  if(tot>0&&Math.random()<0.04)tot*=(1.15+Math.random()*0.25);
+  return cents(tot);
+}
+
+function startFree(sc){
+  const extra=Math.max(0,sc-3)*2;
+  const m=S.mach;
+  S.mode='free';S.freeLeft=m.fs+extra;S.freeWin=0;S.fromFree=false;
+  document.getElementById('banner').classList.remove('hidden');
+  document.getElementById('ban-txt').textContent='FREE GAMES';
+  document.getElementById('ban-cnt').textContent=S.freeLeft;
+  feat(m.featName,
+    m.featIcon+'  '+sc+' × scatter!\n'+m.featDesc+'\n\n'+S.freeLeft+' Free Spins'+(extra?' (+'+extra+' for extra scatters)':'')+'\nSpins play automatically — press CONTINUE',
+    m.featIcon);
+  jackS();reelConfetti(true);
+}
+function endFree(){S.mode='base';S.freeLeft=0;S.fromFree=false;document.getElementById('banner').classList.add('hidden')}
+
+function startHold(init){
+  if(S.mode==='free'){S.savedFreeLeft=S.freeLeft;S.savedFreeWin=S.freeWin;S.fromFree=true}
+  // Only Bolt Train free H&S sets fromBoltTrain (forceHold). Normal 6+ orbs clear it.
+  if(!S.fromBoltTrain)S.fromBoltTrain=false;
+  S.mode='hold';S.respins=3;S.holdWin=0;S.hasTrain=false;S.trainJackpotPaid=false;
+  S.hold=init.map(s=>{
+    if(s.t==='orb'||s.t==='train'){S.holdWin=cents(S.holdWin+(s.v||0));if(s.t==='train'&&!s.tier)S.hasTrain=true;return{...s,lock:true}}
+    return null;
+  });
+  document.getElementById('banner').classList.remove('hidden');
+  document.getElementById('ban-txt').textContent='HOLD & SPIN';
+  document.getElementById('ban-cnt').textContent=S.respins;
+  document.getElementById('win').textContent=fmt(S.holdWin);
+  const g=document.getElementById('grid');
+  for(let i=0;i<15;i++){
+    if(S.hold[i])cell(g.children[i],S.hold[i]);
+    else{g.children[i].className='cell';g.children[i].textContent=''}
+  }
+  feat('HOLD & SPIN',S.hold.filter(Boolean).length+' orbs locked!\nNew orb resets spins to 3\nFill all 15 = GRAND\n3 Bolt Trains = Mini/Major/Grand','⚡');
+  jackS();reelConfetti(true);
+}
+
+function forceHold(){
+  // Free Hold & Spin from Bolt Train — no free prize train
+  // Player must land 3 matching train tiers (or get default MINI at end)
+  const m=S.mach;const init=[];let n=0;
+  S.fromBoltTrain=true;
+  for(let i=0;i<15;i++){
+    if(n<6&&Math.random()<0.55){init[i]=makeOrb(m);n++}
+    else init[i]={t:'n',e:'·',v:0,l:''};
+  }
+  while(init.filter(s=>s.t==='orb'||s.t==='train').length<6){
+    const i=Math.floor(Math.random()*15);
+    if(init[i].t!=='orb'&&init[i].t!=='train')init[i]=makeOrb(m);
+  }
+  startHold(init);
+}
+
+async function holdSpin(){
+  const m=S.mach;const g=document.getElementById('grid');
+  const sp=S.speed==='real'?1:0.5;
+  spinS();
+  const anim=setInterval(()=>{
+    for(let i=0;i<15;i++)if(!S.hold[i]){
+      const s=holdSym(m);cell(g.children[i],s.t==='e'?{t:'n',e:'·'}:s);
+      g.children[i].classList.add('spinning');
+    }
+  },40);
+  await delay(900*sp);clearInterval(anim);
+  let neu=0;
+  for(let i=0;i<15;i++){
+    if(S.hold[i])continue;
+    g.children[i].classList.remove('spinning');
+    const s=holdSym(m);
+    if(s.t==='orb'||s.t==='train'){
+      S.hold[i]={...s,lock:true};S.holdWin=cents(S.holdWin+(s.v||0));
+      // Only non-tiered trains (Mythic Express machine) open the Express Board
+      if(s.t==='train'&&!s.tier)S.hasTrain=true;neu++;lockS();
+      cell(g.children[i],S.hold[i]);
+      g.children[i].classList.add('land');
+      setTimeout(()=>g.children[i].classList.remove('land'),280);
+    }else cell(g.children[i],{t:'n',e:''});
+  }
+  document.getElementById('win').textContent=fmt(S.holdWin);
+  if(neu>0){S.respins=3;reelConfetti(false)}else S.respins--;
+  document.getElementById('ban-cnt').textContent=Math.max(0,S.respins);
+
+  const trains=S.hold.filter(s=>s&&s.t==='train'&&s.tier);
+  const trainCount=trains.length;
+
+  // 3 matching train tiers → that pot (MINI/MAJOR/GRAND)
+  if(!S.trainJackpotPaid){
+    const counts={MINI:0,MAJOR:0,GRAND:0};
+    trains.forEach(t=>{if(counts[t.tier]!=null)counts[t.tier]++});
+    let matched=null;
+    if(counts.GRAND>=3)matched='GRAND';
+    else if(counts.MAJOR>=3)matched='MAJOR';
+    else if(counts.MINI>=3)matched='MINI';
+    if(matched){
+      S.trainJackpotPaid=true;
+      const key=matched==='GRAND'?'g':matched==='MAJOR'?'j':'m';
+      const prize=cents(S.ct[key]);
+      S.holdWin=cents(S.holdWin+prize);
+      S.ct[key]=CT_BASE[key];
+      document.getElementById('win').textContent=fmt(S.holdWin);
+      updJP();
+      feat('🚂 '+matched+' TRAIN!','3 × '+matched+' trains!\n+$'+fmt(prize)+'\nHold total: $'+fmt(S.holdWin),'🚂');
+      jackS();startCoinRain();
+    }
+  }
+
+  if(S.hold.filter(Boolean).length===15){
+    const jp=curJP();const gr=cents(jp.g);
+    S.holdWin=cents(S.holdWin+gr);S.bal=cents(S.bal+S.holdWin);jp.g=S.mach.jpBase.g;
+    document.getElementById('win').textContent=fmt(S.holdWin);
+    bigWin(S.holdWin,true);
+    feat('GRAND JACKPOT!','Screen filled!\nTotal: $'+fmt(S.holdWin),'🏆');endHold();return;
+  }
+  if(S.respins<=0){
+    // Bolt Train feature: no 3-of-a-kind → default MINI consolation
+    if(S.fromBoltTrain&&!S.trainJackpotPaid){
+      S.trainJackpotPaid=true;
+      const prize=cents(S.ct.m);
+      S.holdWin=cents(S.holdWin+prize);
+      S.ct.m=CT_BASE.m;
+      updJP();
+      feat('🚂 MINI TRAIN','No 3 matching trains\nDefault MINI prize +$'+fmt(prize)+'\nHold total: $'+fmt(S.holdWin),'🚂');
+    }
+    S.bal=cents(S.bal+S.holdWin);
+    addXP(2+Math.min(5,Math.floor(S.holdWin/Math.max(1,total()))));
+    document.getElementById('win').textContent=fmt(S.holdWin);
+    if(S.holdWin>=total()*6){bigWin(S.holdWin)}
+    else winS(true);
+    if(S.hasTrain&&S.mach.hasTrain&&!S.fromBoltTrain){feat('MYTHIC EXPRESS','Boarding the train…','🚂');await delay(280);startTrain()}
+    else{feat('HOLD & SPIN COMPLETE','Total win: $'+fmt(S.holdWin)+(trainCount?'\n'+trainCount+' Bolt Train(s) on board':''),'⚡');endHold()}
+  }
+}
+function endHold(){
+  if(S.fromFree&&S.savedFreeLeft>0){
+    S.mode='free';S.freeLeft=S.savedFreeLeft;S.freeWin=cents(S.savedFreeWin+S.holdWin);S.fromFree=false;
+    document.getElementById('banner').classList.remove('hidden');
+    document.getElementById('ban-txt').textContent='FREE GAMES';
+    document.getElementById('ban-cnt').textContent=S.freeLeft;
+  }else{S.mode='base';S.fromFree=false;document.getElementById('banner').classList.add('hidden')}
+  S.hold=null;S.fromBoltTrain=false;
+}
+
+function startTrain(){
+  S.mode='train';S.tRes=3;S.tWin=0;S.tGrid=Array(8).fill(null);
+  document.getElementById('reels-area').classList.add('hidden');
+  document.getElementById('train-area').classList.remove('hidden');
+  document.getElementById('banner').classList.remove('hidden');
+  document.getElementById('ban-txt').textContent='MYTHIC EXPRESS';
+  document.getElementById('ban-cnt').textContent=S.tRes;
+  document.getElementById('win').textContent='0';
+  const tg=document.getElementById('tgrid');tg.innerHTML='';
+  for(let i=0;i<8;i++){const c=document.createElement('div');c.className='cell';c.style.borderColor='#6622aa';tg.appendChild(c)}
+  jackS();
+}
+async function trainSpin(){
+  const tg=document.getElementById('tgrid');spinS();
+  const anim=setInterval(()=>{for(let i=0;i<8;i++)if(!S.tGrid[i]){const s=fireball();tg.children[i].textContent=s.e||'·'}},40);
+  await delay(850);clearInterval(anim);
+  let neu=0;
+  for(let i=0;i<8;i++){
+    if(S.tGrid[i])continue;
+    const s=fireball();
+    if(s.t==='fire'){S.tGrid[i]=s;S.tWin+=s.v;neu++;lockS();tg.children[i].className='cell orb';tg.children[i].innerHTML=s.e+'<span class="tag">'+s.l+'</span>'}
+    else{tg.children[i].textContent='';tg.children[i].className='cell'}
+  }
+  document.getElementById('win').textContent=fmt(S.tWin);
+  if(neu>0)S.tRes=3;else S.tRes--;
+  document.getElementById('ban-cnt').textContent=Math.max(0,S.tRes);
+  if(S.tGrid.filter(Boolean).length===8){
+    const f=Math.floor(curJP().j*1.5);S.tWin+=f;S.bal+=S.tWin;
+    document.getElementById('win').textContent=fmt(S.tWin);bigWin(S.tWin,true);
+    feat('FORTUNE 8!','Express Board filled!\nTotal: $'+fmt(S.tWin),'🚂');endTrain();return;
+  }
+  if(S.tRes<=0){
+    S.bal+=S.tWin;addXP(3+Math.floor(S.tWin/Math.max(1,total())));
+    if(S.tWin>=total()*6){bigWin(S.tWin)}else winS(true);
+    feat('MYTHIC EXPRESS COMPLETE','Total: $'+fmt(S.tWin),'🚂');endTrain();
+  }
+}
+function endTrain(){
+  if(S.fromFree&&S.savedFreeLeft>0){
+    S.mode='free';S.freeLeft=S.savedFreeLeft;S.freeWin=S.savedFreeWin+S.tWin;S.fromFree=false;
+    document.getElementById('train-area').classList.add('hidden');
+    document.getElementById('reels-area').classList.remove('hidden');
+    document.getElementById('banner').classList.remove('hidden');
+    document.getElementById('ban-txt').textContent='FREE GAMES';
+    document.getElementById('ban-cnt').textContent=S.freeLeft;
+    emptyGrid();
+  }else{
+    S.mode='base';S.fromFree=false;
+    document.getElementById('train-area').classList.add('hidden');
+    document.getElementById('reels-area').classList.remove('hidden');
+    document.getElementById('banner').classList.add('hidden');
+    emptyGrid();
+  }
+  S.tGrid=null;
+}
+
+async function cashTrain(){
+  trainHorn();
+  const fly=document.getElementById('train-fly');
+  document.getElementById('train-fly-lbl').textContent='BOLT TRAIN';
+  fly.classList.add('show');
+  const eng=fly.querySelector('.engine');eng.style.animation='none';void eng.offsetWidth;eng.style.animation='';
+  await delay(1900);fly.classList.remove('show');
+  document.getElementById('ct-tier').textContent='FREE HOLD & SPIN';
+  document.getElementById('ct-amt').textContent='3 matching trains win Mini / Major / Grand';
+  openModal('m-cashtrain');cashS();reelConfetti(true);ui();
+}
+
+let tickerTimer=null;
+function bigWin(a,mega){
+  startWinTicker(a,mega||a>=total()*15);
+  winS(true);reelConfetti(true);startCoinRain();
+}
+function startWinTicker(amount,mega){
+  S.tickering=true;
+  // Only pause base game — free spins / features keep flowing
+  if(S.mode==='base'){
+    S.winPause=true;
+    document.getElementById('win-pause').classList.add('show');
+  }
+  const wrap=document.getElementById('win-ticker');
+  document.getElementById('wt-label').textContent=mega?'MEGA WIN':'BIG WIN';
+  wrap.classList.add('show');
+  const el=document.getElementById('wt-val');
+  let cur=0;const target=Number(amount)||0;
+  const steps=40;const step=target/steps;let i=0;
+  if(tickerTimer)clearInterval(tickerTimer);
+  tickerTimer=setInterval(()=>{
+    i++;cur=i>=steps?target:cents(cur+step);
+    el.textContent=fmt(cur);
+    if(i>=steps){
+      clearInterval(tickerTimer);tickerTimer=null;el.textContent=fmt(target);
+      // Auto-dismiss ticker during free/hold so features aren't blocked
+      if(S.mode!=='base')setTimeout(()=>stopWinTicker(),1200);
+    }
+  },40);
+}
+function stopWinTicker(){
+  if(tickerTimer){clearInterval(tickerTimer);tickerTimer=null}
+  S.tickering=false;
+  document.getElementById('win-ticker').classList.remove('show');
+}
+function overlay(html,cls){
+  const o=document.getElementById('overlay');const t=document.getElementById('ov-text');
+  t.className='ov-msg '+cls;t.innerHTML=html;
+  o.classList.remove('fade-out');o.classList.add('show');
+  setTimeout(()=>{o.classList.add('fade-out');setTimeout(()=>{o.classList.remove('show','fade-out')},400)},2200);
+}
+function feat(t,b,icon){
+  document.getElementById('f-icon').textContent=icon||'⚡';
+  document.getElementById('f-title').textContent=t;
+  document.getElementById('f-body').textContent=b;
+  openModal('m-feat');
+}
+
+/* ---------- Coin rain (skippable) ---------- */
+let coinAnim=null,coins=[];
+function startCoinRain(){
+  S.coinRaining=true;
+  const wrap=document.getElementById('coin-rain');
+  const canvas=document.getElementById('coin-canvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  wrap.classList.add('show');
+  coins=[];
+  for(let i=0;i<60;i++){
+    coins.push({
+      x:Math.random()*canvas.width,
+      y:-Math.random()*canvas.height,
+      r:6+Math.random()*10,
+      vy:3+Math.random()*6,
+      rot:Math.random()*Math.PI*2,
+      vr:(Math.random()-0.5)*0.2
+    });
+  }
+  coinDropS();
+  const loop=()=>{
+    if(!S.coinRaining)return;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    coins.forEach(c=>{
+      c.y+=c.vy;c.rot+=c.vr;
+      if(c.y>canvas.height+20){c.y=-20;c.x=Math.random()*canvas.width}
+      ctx.save();
+      ctx.translate(c.x,c.y);ctx.rotate(c.rot);
+      ctx.fillStyle='#ffd700';
+      ctx.beginPath();ctx.ellipse(0,0,c.r,c.r*0.7,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#b8860b';
+      ctx.beginPath();ctx.ellipse(0,0,c.r*0.5,c.r*0.35,0,0,Math.PI*2);ctx.fill();
+      ctx.restore();
+    });
+    coinAnim=requestAnimationFrame(loop);
+  };
+  loop();
+  // Auto-stop after 3.5s if not skipped
+  setTimeout(()=>{if(S.coinRaining)stopCoinRain()},3500);
+}
+function stopCoinRain(){
+  if(!S.coinRaining)return;
+  S.coinRaining=false;
+  if(coinAnim)cancelAnimationFrame(coinAnim);
+  document.getElementById('coin-rain').classList.remove('show');
+  tryResumeAuto();
+}
+document.getElementById('coin-rain').onclick=()=>stopCoinRain();
+
+function confettiBurst(big){
+  const c=confetti.create(document.getElementById('confetti-canvas'),{resize:true});
+  c({particleCount:big?180:70,spread:big?120:75,origin:{y:.38},colors:['#ffd700','#00e5ff','#ff00aa','#ff4400','#fff']});
+  if(big){
+    setTimeout(()=>c({particleCount:80,spread:100,origin:{y:.55,x:.2},colors:['#ffd700','#fff']}),200);
+    setTimeout(()=>c({particleCount:80,spread:100,origin:{y:.55,x:.8},colors:['#00e5ff','#ff00aa']}),350);
+  }
+}
+function reelConfetti(grand){
+  const canvas=document.getElementById('reel-confetti');
+  if(!canvas)return;
+  const rect=canvas.parentElement.getBoundingClientRect();
+  canvas.width=rect.width;canvas.height=rect.height;
+  const c=confetti.create(canvas,{resize:false});
+  c({particleCount:grand?90:45,spread:grand?70:50,origin:{y:0.55,x:0.5},
+     colors:['#ffd700','#00ff88','#fff','#00e5ff','#ff66aa'],
+     startVelocity:grand?22:14,gravity:0.9,ticks:grand?160:110});
+}
+
+function openDaily(){
+  const ok=!S.lastDaily||Date.now()-S.lastDaily>=86400000;
+  openModal('m-daily');
+  if(ok){document.getElementById('d-ok').classList.remove('hidden');document.getElementById('d-wait').classList.add('hidden');document.getElementById('d-msg').textContent='Ready!'}
+  else{document.getElementById('d-ok').classList.add('hidden');document.getElementById('d-wait').classList.remove('hidden');document.getElementById('d-msg').textContent='Next in:';tickD()}
+}
+function tickD(){const r=Math.max(0,86400000-(Date.now()-S.lastDaily));const h=Math.floor(r/3600000),m=Math.floor((r%3600000)/60000),s=Math.floor((r%60000)/1000);document.getElementById('d-tmr').textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`}
+
+/* ---------- Reward Wheel ---------- */
+const WHEEL_COST=25;
+const WHEEL_PRIZES=[
+  {label:'$50',type:'cash',v:50,color:'#2244aa'},
+  {label:'$150',type:'cash',v:150,color:'#2266cc'},
+  {label:'+20 XP',type:'xp',v:20,color:'#228866'},
+  {label:'$300',type:'cash',v:300,color:'#aa8822'},
+  {label:'+50 XP',type:'xp',v:50,color:'#22aa66'},
+  {label:'$75',type:'cash',v:75,color:'#6644aa'},
+  {label:'+10 Tokens',type:'tok',v:10,color:'#aa4488'},
+  {label:'$500',type:'cash',v:500,color:'#ccaa22'}
+];
+const MULT_PRIZES=[
+  {label:'1×',v:1,color:'#334455'},
+  {label:'2×',v:2,color:'#226688'},
+  {label:'1×',v:1,color:'#334455'},
+  {label:'3×',v:3,color:'#886622'},
+  {label:'1×',v:1,color:'#334455'},
+  {label:'4×',v:4,color:'#aa5522'},
+  {label:'2×',v:2,color:'#226688'},
+  {label:'5×',v:5,color:'#cc2244'}
+];
+let wheelAngle=0,multAngle=0;
+function wheelSegAtTop(angle,n){
+  const slice=Math.PI*2/n;
+  let a=(((-Math.PI/2)-angle)%(Math.PI*2)+(Math.PI*2))%(Math.PI*2);
+  return Math.floor(a/slice)%n;
+}
+function drawWheelOn(canvasId,angle,prizes,size,highlight){
+  const c=document.getElementById(canvasId);if(!c)return;
+  const ctx=c.getContext('2d');const n=prizes.length;const cx=size/2,cy=size/2,r=size/2-10;
+  ctx.clearRect(0,0,size,size);
+  for(let i=0;i<n;i++){
+    const a0=angle+i*(Math.PI*2/n),a1=a0+Math.PI*2/n;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,a0,a1);ctx.closePath();
+    ctx.fillStyle=highlight===i?'#ffd700':prizes[i].color;ctx.fill();
+    ctx.strokeStyle='#111';ctx.lineWidth=2;ctx.stroke();
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(a0+Math.PI/n);
+    ctx.fillStyle='#fff';ctx.font='bold '+(size>180?11:10)+'px Orbitron,sans-serif';ctx.textAlign='right';
+    ctx.fillText(prizes[i].label,r-6,3);ctx.restore();
+  }
+  ctx.beginPath();ctx.moveTo(cx,4);ctx.lineTo(cx-8,22);ctx.lineTo(cx+8,22);ctx.closePath();
+  ctx.fillStyle='#ffd700';ctx.fill();
+}
+function drawWheel(hi){drawWheelOn('wheel-canvas',wheelAngle,WHEEL_PRIZES,220,hi)}
+function drawMult(hi){drawWheelOn('mult-canvas',multAngle,MULT_PRIZES,160,hi)}
+function openWheel(){
+  openModal('m-wheel');
+  document.getElementById('wh-tokens').textContent=S.tokens|0;
+  document.getElementById('wh-spins').textContent=Math.floor((S.tokens|0)/WHEEL_COST);
+  document.getElementById('wh-result').textContent='';
+  document.getElementById('wh-spin').disabled=S.wheelBusy||(S.tokens|0)<WHEEL_COST;
+  drawWheel(-1);drawMult(-1);
+}
+function animateWheel(canvasAngleRef,setAngle,prizes,drawFn,spins,dur){
+  return new Promise(resolve=>{
+    const n=prizes.length,slice=Math.PI*2/n;
+    const idx=Math.floor(Math.random()*n);
+    const finalAbs=(-Math.PI/2)-(idx+0.5)*slice-(spins*Math.PI*2);
+    const start=canvasAngleRef();
+    let delta=finalAbs-start;
+    while(delta>0)delta-=Math.PI*2;
+    while(delta>-spins*Math.PI*2)delta-=Math.PI*2;
+    const t0=performance.now();
+    function frame(now){
+      const p=Math.min(1,(now-t0)/dur);
+      const ease=1-Math.pow(1-p,3);
+      setAngle(start+delta*ease);
+      drawFn(p>0.9?wheelSegAtTop(canvasAngleRef(),n):-1);
+      if(p<1)requestAnimationFrame(frame);
+      else{
+        setAngle(start+delta);
+        const winIdx=wheelSegAtTop(canvasAngleRef(),n);
+        drawFn(winIdx);
+        resolve(winIdx);
+      }
+    }
+    requestAnimationFrame(frame);
+  });
+}
+async function spinWheel(){
+  if(S.wheelBusy||(S.tokens|0)<WHEEL_COST)return;
+  S.wheelBusy=true;S.tokens-=WHEEL_COST;save();
+  document.getElementById('wh-tokens').textContent=S.tokens;
+  document.getElementById('wh-spins').textContent=Math.floor(S.tokens/WHEEL_COST);
+  document.getElementById('wh-spin').disabled=true;
+  document.getElementById('wh-result').textContent='Spinning prize…';
+  click();
+  const prizeIdx=await animateWheel(()=>wheelAngle,a=>{wheelAngle=a},WHEEL_PRIZES,drawWheel,5+Math.floor(Math.random()*3),3200);
+  document.getElementById('wh-result').textContent='Multiplier…';
+  const multIdx=await animateWheel(()=>multAngle,a=>{multAngle=a},MULT_PRIZES,drawMult,4+Math.floor(Math.random()*2),2000);
+  const prize=WHEEL_PRIZES[prizeIdx];
+  const mult=MULT_PRIZES[multIdx].v;
+  if(prize.type==='cash'){
+    const won=cents(prize.v*mult);
+    S.bal=cents(S.bal+won);
+    document.getElementById('wh-result').textContent='$'+fmt(prize.v)+' × '+mult+' = $'+fmt(won)+'!';
+  }else if(prize.type==='xp'){
+    const won=prize.v*mult;
+    addXP(won);
+    document.getElementById('wh-result').textContent='+'+prize.v+' XP × '+mult+' = +'+won+' XP!';
+  }else if(prize.type==='tok'){
+    const won=prize.v*mult;
+    S.tokens=(S.tokens|0)+won;
+    document.getElementById('wh-result').textContent='+'+prize.v+' tokens × '+mult+' = +'+won+' tokens!';
+  }
+  save();ui();
+  document.getElementById('wh-tokens').textContent=S.tokens;
+  document.getElementById('wh-spins').textContent=Math.floor(S.tokens/WHEEL_COST);
+  S.wheelBusy=false;
+  document.getElementById('wh-spin').disabled=(S.tokens|0)<WHEEL_COST;
+  jackS();reelConfetti(true);
+}
+
+document.getElementById('btn-spin').onclick=()=>{click();doSpin()};
+document.getElementById('btn-back').onclick=()=>{if(S.spinning)return;S.auto=false;S.mode='base';S.winPause=false;S.modalBlock=false;S.coinRaining=false;S.tickering=false;document.getElementById('win-pause').classList.remove('show');document.getElementById('coin-rain').classList.remove('show');document.getElementById('win-ticker').classList.remove('show');document.getElementById('game').classList.add('hidden');document.getElementById('lobby').classList.remove('hidden');ui();click()};
+document.getElementById('btn-auto').onclick=()=>{if(S.mode!=='base')return;click();if(S.auto){S.auto=false;S.autoN=0}else{S.auto=true;S.autoN=S.autoLimit===0?Infinity:S.autoLimit;if(!S.spinning&&!S.winPause&&!S.modalBlock&&!S.coinRaining)doSpin()}ui()};
+document.querySelectorAll('.opt-auto').forEach(b=>b.onclick=()=>{S.autoLimit=parseInt(b.dataset.v,10);save();ui();click()});
+function toast(title,body){
+  document.getElementById('toast-title').textContent=title||'Notice';
+  document.getElementById('toast-body').textContent=body||'';
+  openModal('m-toast');
+}
+document.getElementById('toast-ok').onclick=()=>{click();closeModal('m-toast')};
+document.getElementById('btn-daily').onclick=()=>{click();openDaily()};
+document.getElementById('btn-wheel').onclick=()=>{click();openWheel()};
+document.getElementById('btn-help').onclick=()=>{click();openModal('m-help')};
+document.getElementById('help-close').onclick=()=>{click();closeModal('m-help')};
+document.getElementById('btn-daily-g').onclick=()=>{click();openDaily()};
+document.getElementById('btn-wheel-g').onclick=()=>{click();openWheel()};
+document.getElementById('wh-spin').onclick=()=>spinWheel();
+document.getElementById('wh-close').onclick=()=>closeModal('m-wheel');
+document.getElementById('btn-options').onclick=()=>{click();openModal('m-opt');ui()};
+document.getElementById('btn-sound').onclick=()=>{S.sound=!S.sound;save();ui();if(S.sound)click()};
+document.getElementById('opt-close').onclick=()=>closeModal('m-opt');
+document.getElementById('opt-snd').onclick=()=>{S.sound=!S.sound;save();ui()};
+document.querySelectorAll('.opt-spd').forEach(b=>b.onclick=()=>{S.speed=b.dataset.v;save();ui();click()});
+document.getElementById('d-claim').onclick=()=>{click();S.bal+=8000;S.lastDaily=Date.now();addXP(80);save();ui();closeModal('m-daily');confettiBurst()};
+document.getElementById('d-close').onclick=()=>closeModal('m-daily');
+document.getElementById('l-close').onclick=()=>closeModal('m-lvl');
+document.getElementById('f-close').onclick=()=>closeModal('m-feat');
+document.getElementById('ct-go').onclick=()=>{click();closeModal('m-cashtrain');forceHold()};
+document.addEventListener('keydown',e=>{if(e.code==='Space'&&!document.getElementById('game').classList.contains('hidden')){e.preventDefault();doSpin()}});
+setInterval(()=>{if(!document.getElementById('m-daily').classList.contains('hidden')&&!document.getElementById('d-wait').classList.contains('hidden'))tickD()},1000);
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+
+load();ui();
+</script>
+</body>
+</html>
