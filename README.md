@@ -1,6 +1,6 @@
 # Bolt Spin Slots
 
-**Release v501** — colder H&S/Free/lines; bankroll titles track **current** balance through **Bolt Baron ~$10B** (can demote). Prior: v467 rebalance. — Hold & Spin virtual slots.
+**Release Early Access** 
 
 A fast, mobile-friendly **Hold & Spin** style slot experience for the browser.  
 Virtual play only — built for fun, not real-money gambling.
