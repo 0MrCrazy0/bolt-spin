@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png"/>
 <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png"/>
 <title>Bolt Spin Slots</title>
-<!-- Public Release v7.1.1 -->
+<!-- Public Release v7.1.2 -->
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
@@ -2409,7 +2409,7 @@ body.modal-open .btn-spin{
     <div style="font-weight:900;font-size:1.4rem;color:#ffd700;letter-spacing:2px;text-shadow:0 0 16px #ffd700">BOLT SPIN</div>
     <div style="margin-top:14px;font-size:.85rem;color:#00e5ff;font-weight:700;animation:blink 1.2s ease infinite">TAP TO START</div>
     <div style="margin-top:10px;font-size:.68rem;color:#9ca3af;line-height:1.45;max-width:280px;margin-left:auto;margin-right:auto">Virtual play only · No real money · Entertainment</div>
-	<div id="startup-virt-disclaimer" class="text-center text-[8px] sm:text-[9px] text-gray-500 px-2 py-0.5 tracking-wide">· Release v7.1.1 · <span id="gate-new-badge" aria-label="New version">NEW!</span></div>
+	<div id="startup-virt-disclaimer" class="text-center text-[8px] sm:text-[9px] text-gray-500 px-2 py-0.5 tracking-wide">· Release v7.1.2 · <span id="gate-new-badge" aria-label="New version">NEW!</span></div>
   </div>
 </div>
 <div id="rotate-tip" aria-live="polite">
@@ -2451,7 +2451,7 @@ body.modal-open .btn-spin{
     <div class="flex flex-wrap items-center justify-between gap-1 mb-1">
       <div class="min-w-0">
         <h1 class="text-lg sm:text-xl font-black text-yellow-400 glow truncate">⚡ BOLT SPIN</h1>
-        <p class="text-[9px] sm:text-[10px] text-gray-400">Virtual play · No real money · Entertainment · Release v7.1.1 ·</p>
+        <p class="text-[9px] sm:text-[10px] text-gray-400">Virtual play · No real money · Entertainment · Release v7.1.2 ·</p>
       </div>
     </div>
     <!-- Level + title ABOVE XP; wallets BELOW XP (skinny-screen safe) -->
@@ -2571,7 +2571,7 @@ body.modal-open .btn-spin{
   <div id="mach-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 items-stretch"></div>
   <p class="pt-3 text-center text-[10px] text-gray-500">20 themed machines unlock by Level 195 · Levels never cap · Bet what you can afford</p>
     <div id="lobby-virt-disclaimer" class="text-center text-[8px] sm:text-[9px] text-gray-500 px-2 py-0.5 tracking-wide">18+ entertainment · Virtual play only · No real money · Not real-money gambling</div>
-	<div id="lobby-release" class="text-center text-[8px] sm:text-[9px] text-gray-500 px-2 py-0.5 tracking-wide">· Release v7.1.1 ·</div>
+	<div id="lobby-release" class="text-center text-[8px] sm:text-[9px] text-gray-500 px-2 py-0.5 tracking-wide">· Release v7.1.2 ·</div>
   <div class="flex justify-center items-center py-3 pb-4 gap-2" style="position:relative">
     <button type="button" id="btn-secret-toilet" title="" aria-label="">🚽</button>
     <button type="button" id="lobby-top" class="btn" style="padding:10px 32px;font-size:.8rem;letter-spacing:.5px" title="Back to top">↑ TOP</button>
@@ -5038,7 +5038,7 @@ function trainHorn(){
   setTimeout(()=>{tn(1000,'sine',0.4,0.14);tn(1400,'sine',0.3,0.1);tn(1800,'triangle',0.25,0.08);featureBell()},620);
 }
 
-const APP_VER='v7.1.1';
+const APP_VER='v7.1.2';
 const SAVE_KEY='bolt_spin_save';
 const OLD_KEYS=['ll_v20','ll_v19','ll_v18','ll_v17','ll_v16','ll_v15','ll_v13','ll_v10','ll_v9','ll_v8','ll_v7','ll_v6'];
 function flushSave(){
@@ -5738,43 +5738,58 @@ function awardMachineJackpot(tier, paidAmount, cellEl){
       }catch(_){}
       /* no MACHINE gold toast */
 
-      // MACHINE total — H&S + Express (bolt/board already played above)
+      // Credit cash NOW (feature continues after soft total — do not rely on bank-fly)
       try{
-        if(S.mode==='train'){
-          // Soft total so Express can continue; full overlay like H&S
-          await Promise.race([
-            celebrateFeatureTotal('MACHINE '+tier, prize, tier==='MAJOR'?'💎':tier==='MINOR'?'💚':'💗', {
-              soft:true,
-              forcePause:false,
-              holdMs:fast?1600:2400,
-              toastMs:fast?1600:2400
-            }),
-            delay(fast?3000:4000)
-          ]);
+        S.bal=cents((S.bal||0)+prize);
+        if(S.mode==='hold'||S.mode==='train'){
+          if(S.mode==='hold')S.holdWin=cents((S.holdWin||0)+prize);
+          if(S.mode==='train')S.tWin=cents((S.tWin||0)+prize);
+          try{setWinAmount(S.mode==='hold'?S.holdWin:S.tWin)}catch(_){}
         }else{
-          // Main 5×3 reels: same clear prize total as Express (fade, then feature continues)
-          try{
-            await Promise.race([
-              celebrateFeatureTotal('MACHINE '+tier, prize, tier==='MAJOR'?'💎':tier==='MINOR'?'💚':'💗', {
-                soft:true,
-                forcePause:false,
-                holdMs:fast?1600:2400,
-                toastMs:fast?1600:2400
-              }),
-              delay(fast?3000:4000)
-            ]);
-          }catch(_){
-            try{
-              await enqueueWinFlash(prize, tier==='MAJOR'||tier==='MINOR', {
-                forcePause:false,
-                label:'MACHINE '+tier,
-                holdMs:fast?1500:2100
-              });
-            }catch(__){}
+          try{setWinAmount(prize)}catch(_){}
+        }
+        try{noteSessionSpin(prize)}catch(_){}
+        try{addXP(xpFromWin(prize),{silent:true})}catch(_){}
+      }catch(_){}
+
+      // MACHINE total — MUST stay soft during H&S / Express so feature does not end
+      try{
+        const inFeat=(S.mode==='hold'||S.mode==='train');
+        await Promise.race([
+          celebrateFeatureTotal('MACHINE '+tier, prize, tier==='MAJOR'?'💎':tier==='MINOR'?'💚':'💗', {
+            soft:true,
+            forcePause:false,
+            holdMs:fast?(inFeat?1400:1600):(inFeat?2000:2400),
+            toastMs:fast?1600:2400,
+            bankFlyAfter:false // already credited above
+          }),
+          delay(fast?3000:4000)
+        ]);
+      }catch(_){
+        try{
+          await enqueueWinFlash(prize, tier==='MAJOR'||tier==='MINOR', {
+            forcePause:false,
+            label:'MACHINE '+tier,
+            holdMs:fast?1500:2100
+          });
+        }catch(__){}
+      }
+      // Clear total overlay ONLY — never endHold / never touch S.hold / S.respins
+      try{stopWinTicker();S.tickering=false;S.winPause=false;S.awaitCollect=false}catch(_){}
+      try{setContinueHint(false)}catch(_){}
+      // Re-assert H&S banner if still in Hold (prize total may have stolen focus)
+      try{
+        if(S.mode==='hold'&&S.hold){
+          const lockedNow=S.hold.filter(Boolean).length;
+          const r=Math.max(0,S.respins|0);
+          if(S.fromBoltTrain){
+            setBanner('BOLT TRAIN H&S',r,lockedNow+'/15 · 3× trains = 🚂 pot','LOCKED '+lockedNow+'/15');
+          }else{
+            setBanner('HOLD & SPIN',r,lockedNow+'/15 LOCKED · PRESS SPIN','LOCKED '+lockedNow+'/15');
           }
+          try{document.getElementById('ban-cnt').textContent=String(r)}catch(_){}
         }
       }catch(_){}
-      try{stopWinTicker();S.tickering=false;S.winPause=false}catch(_){}
       await delay(fast?100:160);
       finishClean(prize);
     }catch(e){
@@ -9008,8 +9023,17 @@ async function doSpin(){
   try{
     if(S.mode==='base'||S.mode==='free')await baseSpin();
     else if(S.mode==='hold'){
-      if(!S.hold||(S.respins|0)<0){try{endHold()}catch(_){}}
-      else await holdSpin();
+      // Only end when respins exhausted or hold board is gone AND no spins left
+      if((S.respins|0)<0){try{endHold()}catch(_){}}
+      else if(!S.hold){
+        // Corrupt state mid-feature — do not silently cancel remaining respins
+        try{
+          if((S.respins|0)>0){
+            S.hold=Array(15).fill(null);
+            setBanner('HOLD & SPIN',S.respins,'RECOVERED · PRESS SPIN','LOCKED 0/15');
+          }else try{endHold()}catch(_){}
+        }catch(_){try{endHold()}catch(__){}}
+      }else await holdSpin();
     }
     else if(S.mode==='train'){
       if(S._trainSpinBusy||S._expressFinishing){/* one Express action at a time */}
@@ -11491,15 +11515,25 @@ function paintPreScratchOrIdle(m){
   return false;
 }
 function closeScratchAndResume(){
+  // HARD GUARD: never cancel Hold & Spin / Express if those are the live mode
+  // (leftover scratch flags used to force mode=base after machine prize totals)
+  try{
+    if(S.mode==='hold'||S.mode==='train'){
+      try{S.scratch=null;S._scratchResumeMode=null;S._scratchSavedFreeLeft=0;S._scratchConsumeFree=false;S._scratchTotalLock=false;S._scratchPreSnap=null}catch(_){}
+      return;
+    }
+  }catch(_){}
   const resumeFree=S._scratchResumeMode==='free'||(S._scratchSavedFreeLeft|0)>0;
   try{
     if(resumeFree){
       try{restoreAfterScratch()}catch(_){}
-    }else{
+    }else if(S.mode==='scratch'||S.scratch){
       // Base: leave scratch mode cleanly
       S.mode='base';
     }
-  }catch(_){try{S.mode=resumeFree?'free':'base'}catch(__){}}
+    // else: already base/free — do not force mode changes
+  }catch(_){try{if(S.mode==='scratch')S.mode=resumeFree?'free':'base'}catch(__){}}
+  try{S._scratchResumeMode=null;S._scratchSavedFreeLeft=0;S._scratchConsumeFree=false}catch(_){}
   try{
     if(S.playSnap&&S.playSnap.mode==='scratch')S.playSnap=null;
   }catch(_){}
@@ -12357,7 +12391,7 @@ function startHold(init){
             try{if(cel&&S.hold[ii])cell(cel,S.hold[ii])}catch(_){}
             continue;
           }
-          // End-of-feature: pay each unpaid meter orb (multiple MINIs each pay once)
+          // Seed board: pay each meter orb once (feature CONTINUES — do not end H&S)
           if(!o.jpPaid){
             try{await awardMachineJackpot(o.l, o.v, cel)}catch(_){}
             try{if(S.hold[ii])S.hold[ii].jpPaid=true}catch(_){}
@@ -12835,7 +12869,21 @@ function syncExpressFromHold(){
   return S.hasTrain;
 }
 
-function endHold(){
+function endHold(force){
+  // Safety: never cancel an active H&S that still has respins (machine prize totals used to trip this)
+  try{
+    if(!force&&S.mode==='hold'&&Array.isArray(S.hold)&&(S.respins|0)>0){
+      const locked=S.hold.filter(Boolean).length;
+      if(locked<15){
+        try{
+          setBanner(S.fromBoltTrain?'BOLT TRAIN H&S':'HOLD & SPIN', S.respins,
+            locked+'/15 LOCKED · PRESS SPIN','LOCKED '+locked+'/15');
+          document.getElementById('ban-cnt').textContent=String(S.respins|0);
+        }catch(_){}
+        return; // keep feature alive
+      }
+    }
+  }catch(_){}
   // Snapshot final hold board so Express / lobby reopen shows last symbols
   try{S.playSnap=null}catch(_){}
   // Rewards primarily fly from stopWinTicker after HOLD TOTAL; late backup if no ticker
@@ -13504,7 +13552,8 @@ function skipWinPresentation(ev){
   }catch(_){}
   try{if(typeof stopCoinRain==='function')stopCoinRain()}catch(_){}
   try{setContinueHint(false)}catch(_){}
-  try{if(S.mode==='scratch'||S.scratch||S._scratchResumeMode)closeScratchAndResume()}catch(_){}
+  // Only close Scratch when Scratch is actually active — leftover _scratchResumeMode must NOT kill H&S
+  try{if(S.mode==='scratch'||S.scratch)closeScratchAndResume()}catch(_){}
   try{resolveWinTickerPromise()}catch(_){}
   try{
     if(S.mode==='base'&&!S.spinning){
@@ -18069,7 +18118,7 @@ try{startMusicForCurrentView()}catch(_){}
   
   // ── CONSOLE BANNER ──
 console.log(
-'BOLT-SPIN-SLOTS-RELEASE-v7.1.1 ~ Bolt Spin Slots — Hold & Spin style virtual slots. Entertainment only. Not real-money gambling.                                 \n' +
+'BOLT-SPIN-SLOTS-RELEASE-v7.1.2 ~ Bolt Spin Slots — Hold & Spin style virtual slots. Entertainment only. Not real-money gambling.                                 \n' +
     'Copyright (c) 2026 Bolt Spin Slots',
 );
 })();
