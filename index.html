@@ -13,7 +13,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png"/>
 <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png"/>
 <title>Bolt Spin Slots</title>
-<!-- Public Release v7.1.2 -->
+<!-- Public Release v7.1.3 -->
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
@@ -2409,7 +2409,7 @@ body.modal-open .btn-spin{
     <div style="font-weight:900;font-size:1.4rem;color:#ffd700;letter-spacing:2px;text-shadow:0 0 16px #ffd700">BOLT SPIN</div>
     <div style="margin-top:14px;font-size:.85rem;color:#00e5ff;font-weight:700;animation:blink 1.2s ease infinite">TAP TO START</div>
     <div style="margin-top:10px;font-size:.68rem;color:#9ca3af;line-height:1.45;max-width:280px;margin-left:auto;margin-right:auto">Virtual play only · No real money · Entertainment</div>
-	<div id="startup-virt-disclaimer" class="text-center text-[8px] sm:text-[9px] text-gray-500 px-2 py-0.5 tracking-wide">· Release v7.1.2 · <span id="gate-new-badge" aria-label="New version">NEW!</span></div>
+	<div id="startup-virt-disclaimer" class="text-center text-[8px] sm:text-[9px] text-gray-500 px-2 py-0.5 tracking-wide">· Release v7.1.3 · <span id="gate-new-badge" aria-label="New version">NEW!</span></div>
   </div>
 </div>
 <div id="rotate-tip" aria-live="polite">
@@ -2451,7 +2451,7 @@ body.modal-open .btn-spin{
     <div class="flex flex-wrap items-center justify-between gap-1 mb-1">
       <div class="min-w-0">
         <h1 class="text-lg sm:text-xl font-black text-yellow-400 glow truncate">⚡ BOLT SPIN</h1>
-        <p class="text-[9px] sm:text-[10px] text-gray-400">Virtual play · No real money · Entertainment · Release v7.1.2 ·</p>
+        <p class="text-[9px] sm:text-[10px] text-gray-400">Virtual play · No real money · Entertainment · Release v7.1.3 ·</p>
       </div>
     </div>
     <!-- Level + title ABOVE XP; wallets BELOW XP (skinny-screen safe) -->
@@ -2571,7 +2571,7 @@ body.modal-open .btn-spin{
   <div id="mach-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 items-stretch"></div>
   <p class="pt-3 text-center text-[10px] text-gray-500">20 themed machines unlock by Level 195 · Levels never cap · Bet what you can afford</p>
     <div id="lobby-virt-disclaimer" class="text-center text-[8px] sm:text-[9px] text-gray-500 px-2 py-0.5 tracking-wide">18+ entertainment · Virtual play only · No real money · Not real-money gambling</div>
-	<div id="lobby-release" class="text-center text-[8px] sm:text-[9px] text-gray-500 px-2 py-0.5 tracking-wide">· Release v7.1.2 ·</div>
+	<div id="lobby-release" class="text-center text-[8px] sm:text-[9px] text-gray-500 px-2 py-0.5 tracking-wide">· Release v7.1.3 ·</div>
   <div class="flex justify-center items-center py-3 pb-4 gap-2" style="position:relative">
     <button type="button" id="btn-secret-toilet" title="" aria-label="">🚽</button>
     <button type="button" id="lobby-top" class="btn" style="padding:10px 32px;font-size:.8rem;letter-spacing:.5px" title="Back to top">↑ TOP</button>
@@ -3012,7 +3012,7 @@ body.modal-open .btn-spin{
       <div class="text-lg font-black text-yellow-300">🏆 ACHIEVEMENTS</div>
       <button type="button" id="ach-close-top" class="btn btn-sm" style="padding:8px 14px;min-width:72px">CLOSE</button>
     </div>
-    <p class="text-[10px] text-gray-400 mb-2"><span id="ach-count-label">319</span> badges · Earn progress by playing · Free daily bolts do not count for ⚡ badges</p>
+    <p class="text-[10px] text-gray-400 mb-2"><span id="ach-count-label">580</span> badges · Earn progress by playing · Free daily bolts do not count for ⚡ badges</p>
     <div id="ach-summary" class="text-[11px] text-cyan-300 mb-2 font-bold"></div>
     <div id="ach-list" class="text-left space-y-1.5"></div>
     <div class="flex gap-2 mt-3" style="position:sticky;bottom:0;z-index:5;background:rgba(17,24,39,.97);padding:8px 0;margin-bottom:-4px">
@@ -3066,7 +3066,7 @@ body.modal-open .btn-spin{
       <p><b class="text-cyan-300">Reward Wheel</b> — Earn wheel tokens on wins only. <b>25 tokens = 1 spin</b>. Can pay cash, XP, wheel tokens, or <b>⚡ Bolt tokens</b>.</p>
       <p><b class="text-yellow-300">⚡ Bolt Token Premium</b> — token-premium machine. Costs <b>1 / 5 / 10⚡ per spin</b> (no cash bet). Stronger features & free-game boost. Earn ⚡ from the <b>Reward Wheel</b>, Daily / Weekly / Monthly claims, and rare Bolt Train GRAND — not from normal line wins.</p>
       <p><b class="text-cyan-300">Level up</b> — <b>20</b> themed machines unlock from Level 1 to <b>195</b> (Cosmic Crown). Levels never cap — ranks rise with level or machines unlocked (Rookie → Immortal). Tap a locked machine to see its unlock level. Higher bets earn more XP. <b>Lifestyle</b> purchases grant a little XP on <b>first buy only</b>.</p>
-      <p><b class="text-yellow-300">🏆 Achievements</b> — <b id="help-ach-count">319</b> badges in the lobby <b>ACH</b> panel. Progress tracks spins, features, level, machines, lifestyle, raffle, race & bankroll. Claim XP when complete (Claim All available). Free starter bolts do not count toward ⚡ badges.</p>
+      <p><b class="text-yellow-300">🏆 Achievements</b> — <b id="help-ach-count">580</b> badges in the lobby <b>ACH</b> panel. Progress tracks spins, features, level, machines, lifestyle, raffle, race & bankroll. Claim XP when complete (Claim All available). Free starter bolts do not count toward ⚡ badges.</p>
       <p><b class="text-pink-300">Free Games boost</b> — Each machine has its own F-S style (extra wilds, multipliers, denser highs). It only applies <b>during Free Games</b> and shows on the green <b>FREE GAMES</b> banner as <b>FREE BOOST · …</b>.</p>
       <p><b class="text-yellow-300">⚡ Bolt Boost</b> — Random <b>global</b> hot window (~10–13 minutes real time). Slightly higher feature odds on <b>every</b> machine while the gold banner is up. Not the same as Free Games boost.</p>
       <p><b class="text-amber-300">Haptics</b> — Vibration works on <b>Android</b> browsers when Haptics is ON in Options. <b>iPhone Safari does not support</b> the vibration API (Apple limitation).</p>
@@ -5038,7 +5038,7 @@ function trainHorn(){
   setTimeout(()=>{tn(1000,'sine',0.4,0.14);tn(1400,'sine',0.3,0.1);tn(1800,'triangle',0.25,0.08);featureBell()},620);
 }
 
-const APP_VER='v7.1.2';
+const APP_VER='v7.1.3';
 const SAVE_KEY='bolt_spin_save';
 const OLD_KEYS=['ll_v20','ll_v19','ll_v18','ll_v17','ll_v16','ll_v15','ll_v13','ll_v10','ll_v9','ll_v8','ll_v7','ll_v6'];
 function flushSave(){
@@ -18118,7 +18118,7 @@ try{startMusicForCurrentView()}catch(_){}
   
   // ── CONSOLE BANNER ──
 console.log(
-'BOLT-SPIN-SLOTS-RELEASE-v7.1.2 ~ Bolt Spin Slots — Hold & Spin style virtual slots. Entertainment only. Not real-money gambling.                                 \n' +
+'BOLT-SPIN-SLOTS-RELEASE-v7.1.3 ~ Bolt Spin Slots — Hold & Spin style virtual slots. Entertainment only. Not real-money gambling.                                 \n' +
     'Copyright (c) 2026 Bolt Spin Slots',
 );
 })();
