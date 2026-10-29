@@ -7,13 +7,28 @@
 <meta name="color-scheme" content="dark"/>
 <meta name="screen-orientation" content="portrait"/>
 <meta name="description" content="Bolt Spin Slots — Hold & Spin style virtual slots. Entertainment only. Not real-money gambling."/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="Bolt Spin Slots"/>
+<meta property="og:title" content="Bolt Spin Slots"/>
+<meta property="og:description" content="Bolt Spin Slots — Hold &amp; Spin style virtual slots. Entertainment only. Not real-money gambling."/>
+<meta property="og:url" content="https://0mrcrazy0.github.io/bolt-spin/"/>
+<meta property="og:image" content="https://0mrcrazy0.github.io/bolt-spin/og-image.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:image:type" content="image/png"/>
+<meta property="og:image:alt" content="Bolt Spin Slots — Hold &amp; Spin virtual slots, free to play"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Bolt Spin Slots"/>
+<meta name="twitter:description" content="Bolt Spin Slots — Hold &amp; Spin style virtual slots. Entertainment only. Not real-money gambling."/>
+<meta name="twitter:image" content="https://0mrcrazy0.github.io/bolt-spin/og-image.png"/>
+<meta name="twitter:image:alt" content="Bolt Spin Slots — Hold &amp; Spin virtual slots, free to play"/>
 <meta name="robots" content="index,follow"/>
 <link rel="manifest" href="./manifest.json"/>
 <link rel="apple-touch-icon" href="./apple-touch-icon.png"/>
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png"/>
 <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png"/>
 <title>Bolt Spin Slots</title>
-<!-- Public Release v7.1.3 -->
+<!-- Public Release v7.2.3 -->
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
@@ -2409,7 +2424,18 @@ body.modal-open .btn-spin{
     <div style="font-weight:900;font-size:1.4rem;color:#ffd700;letter-spacing:2px;text-shadow:0 0 16px #ffd700">BOLT SPIN</div>
     <div style="margin-top:14px;font-size:.85rem;color:#00e5ff;font-weight:700;animation:blink 1.2s ease infinite">TAP TO START</div>
     <div style="margin-top:10px;font-size:.68rem;color:#9ca3af;line-height:1.45;max-width:280px;margin-left:auto;margin-right:auto">Virtual play only · No real money · Entertainment</div>
-	<div id="startup-virt-disclaimer" class="text-center text-[8px] sm:text-[9px] text-gray-500 px-2 py-0.5 tracking-wide">· Release v7.1.3 · <span id="gate-new-badge" aria-label="New version">NEW!</span></div>
+	<div id="startup-virt-disclaimer" class="text-center text-[8px] sm:text-[9px] text-gray-500 px-2 py-0.5 tracking-wide">· Release v7.2.3 · <span id="gate-new-badge" aria-label="New version">NEW!</span></div>
+  </div>
+</div>
+<!-- Update available banner (shown when new SW activates) -->
+<div id="update-banner" class="fixed left-0 right-0 bottom-0 z-[9998] hidden pointer-events-none" style="padding:10px 12px;padding-bottom:max(10px,env(safe-area-inset-bottom))">
+  <div class="pointer-events-auto mx-auto max-w-md rounded-xl border-2 border-yellow-400 bg-gray-950/95 px-3 py-2.5 shadow-lg flex items-center gap-2" style="box-shadow:0 0 24px rgba(255,215,0,.35)">
+    <div class="flex-1 min-w-0 text-left">
+      <div class="text-xs font-black text-yellow-300">Update available</div>
+      <div class="text-[10px] text-gray-300 leading-snug">A newer version of Bolt Spin is ready. Restart to load the latest release. Your progress is saved.</div>
+    </div>
+    <button type="button" id="update-restart-btn" class="btn btn-sm flex-shrink-0" style="background:linear-gradient(180deg,#ffd700,#b8860b);color:#1a1200;font-weight:900;padding:8px 12px">Restart</button>
+    <button type="button" id="update-dismiss-btn" class="btn btn-sm flex-shrink-0" style="background:#222;color:#aaa;padding:6px 10px" aria-label="Dismiss">✕</button>
   </div>
 </div>
 <div id="rotate-tip" aria-live="polite">
@@ -2451,7 +2477,7 @@ body.modal-open .btn-spin{
     <div class="flex flex-wrap items-center justify-between gap-1 mb-1">
       <div class="min-w-0">
         <h1 class="text-lg sm:text-xl font-black text-yellow-400 glow truncate">⚡ BOLT SPIN</h1>
-        <p class="text-[9px] sm:text-[10px] text-gray-400">Virtual play · No real money · Entertainment · Release v7.1.3 ·</p>
+        <p class="text-[9px] sm:text-[10px] text-gray-400">Virtual play · No real money · Entertainment · Release v7.2.3 ·</p>
       </div>
     </div>
     <!-- Level + title ABOVE XP; wallets BELOW XP (skinny-screen safe) -->
@@ -2571,7 +2597,7 @@ body.modal-open .btn-spin{
   <div id="mach-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 items-stretch"></div>
   <p class="pt-3 text-center text-[10px] text-gray-500">20 themed machines unlock by Level 195 · Levels never cap · Bet what you can afford</p>
     <div id="lobby-virt-disclaimer" class="text-center text-[8px] sm:text-[9px] text-gray-500 px-2 py-0.5 tracking-wide">18+ entertainment · Virtual play only · No real money · Not real-money gambling</div>
-	<div id="lobby-release" class="text-center text-[8px] sm:text-[9px] text-gray-500 px-2 py-0.5 tracking-wide">· Release v7.1.3 ·</div>
+	<div id="lobby-release" class="text-center text-[8px] sm:text-[9px] text-gray-500 px-2 py-0.5 tracking-wide">· Release v7.2.3 ·</div>
   <div class="flex justify-center items-center py-3 pb-4 gap-2" style="position:relative">
     <button type="button" id="btn-secret-toilet" title="" aria-label="">🚽</button>
     <button type="button" id="lobby-top" class="btn" style="padding:10px 32px;font-size:.8rem;letter-spacing:.5px" title="Back to top">↑ TOP</button>
@@ -2860,6 +2886,16 @@ body.modal-open .btn-spin{
       </div>
             <p class="text-[10px] text-gray-500 leading-snug">After a win total counts up: <b class="text-yellow-200">TAP SPIN TO CONTINUE</b>. Tap SPIN to dismiss early, or wait a few seconds and it clears itself. <b class="text-yellow-200">Auto Spin</b> advances on its own. Hold &amp; Express need SPIN each respin. Free Games auto-play.</p>
 <div class="border-t border-gray-700 pt-2 mt-1">
+        <div class="text-xs font-bold text-cyan-300 mb-1">Backup &amp; Restore</div>
+        <div class="text-[10px] text-gray-400 mb-1.5 leading-snug">Export your progress as a file you can keep offline, or restore from a previous backup. Useful when clearing browser data, switching devices, or before a reset.</div>
+        <div class="flex gap-2 mb-2">
+          <button type="button" id="opt-backup" class="btn flex-1" style="background:linear-gradient(180deg,#0e7490,#155e75);color:#ecfeff">⬇ Backup</button>
+          <button type="button" id="opt-restore" class="btn flex-1" style="background:linear-gradient(180deg,#4c1d95,#5b21b6);color:#f5f3ff">⬆ Restore</button>
+        </div>
+        <input type="file" id="opt-restore-file" accept="application/json,.json" class="hidden" aria-hidden="true"/>
+        <div id="opt-backup-msg" class="text-[10px] text-gray-500 min-h-[1.1em] mb-1"></div>
+      </div>
+      <div class="border-t border-gray-700 pt-2 mt-1">
         <div class="text-xs font-bold text-red-300 mb-1">Reset progress</div>
         <div class="text-[10px] text-gray-400 mb-1.5 leading-snug">Clears balance, level, unlocks, tokens, and settings in this browser only.</div>
         <button id="opt-reset" class="btn w-full" style="background:linear-gradient(180deg,#7f1d1d,#450a0a);color:#fecaca">Reset save data</button>
@@ -3051,20 +3087,20 @@ body.modal-open .btn-spin{
       <p><b class="text-amber-300">Scratch &amp; Win</b> — Random themed mini-game (base or during Free Games). Match <b>3</b> prize amounts under the covers to win — all three matched amounts pay. Each machine has its own theme (e.g. Pearl Plunder, Bolt Strike). On the secret cabinet it is <b>Poop &amp; Wipe</b>. Does not spend a free spin when it triggers during F-S; Free Games resume after.</p>
       <p><b class="text-purple-300">Machine Express</b> — Land <b>at least 1 EXPRESS</b> train (🚂 with no Mini/Major/Grand tag) during H&amp;S. When H&amp;S ends, that machine’s <b>8-cell board</b> opens. Extra EXPRESS symbols do <b>not</b> open a second board — they <b>boost this board</b> (2+ → extra respin, 3+ → seeded cells). Fill all 8 for a <b>Fortune</b> bonus. <b>Regular machines:</b> cash $ and rare MINI/MINOR/MAJOR. <b>Bolt Premium only:</b> also ⚡ money orbs, +1 ⚡ bolt-token orbs, and 🎡 +1 wheel spin. Not free spins.</p>
       <p><b class="text-pink-400">Purple tier trains</b> — During H&amp;S, purple trains tagged <b>MINI / MAJOR / GRAND</b> can land. The <b>first 3 of the same tag</b> award the shared 🚂 pot <b>once per H&amp;S</b>. A 4th/5th matching train stays locked but does <b>not</b> award another pot in that same H&amp;S. They do <b>not</b> open Express. No 3-match = no train pot (locked orb cash still pays).</p>
-      <p><b class="text-cyan-300">Board-color jackpot orbs</b> — <span style="color:#ff66aa">MINI</span> / <span style="color:#00ff66">MINOR</span> / <span style="color:#00e5ff">MAJOR</span> match the prize boards. Boards <b>scale with your bet × multi</b> (higher risk → bigger meters). <b>1 orb pays the board</b> (not 3×), then the meter resets. Rare on the <b>Express board</b> too. 🚂 pots also scale with your stake.</p>
+      <p><b class="text-cyan-300">Board-color jackpot orbs</b> — <span style="color:#ff66aa">MINI</span> / <span style="color:#00ff66">MINOR</span> / <span style="color:#00e5ff">MAJOR</span> match the prize boards. Boards <b>scale with your bet × multi</b> (higher risk → bigger meters). <b>1 orb pays the board</b> (not 3×), then the meter resets. Rare on the <b>Express board</b> too. 🚂 pots are shared progressives — they do not scale with your stake (every bet grows them).</p>
       <p><b class="text-yellow-300">⚡ Bolt Pot</b> — Global pot during <b>Bolt Train</b> free H&amp;S only: 3× GRAND trains, full 15 board, or a rare strong grid. Separate from machine progressives.</p>
       <p><b class="text-yellow-200">⚡ Bolt Strike</b> — Random bolt events:
         <br>• <b>Normal machines</b> — rare bonus (cash, tokens, XP, +1⚡, or a symbol spark; can finish a near 5-orb / 2-scatter)
         <br>• <b>Bolt Token Premium</b> — stronger strikes that can complete 6+ orbs or 3 scatters
         <br>• <b>After Hold / Express</b> — bolts hit each won orb while the WIN total counts up (celebration)
       </p>
-      <p><b class="text-yellow-300">⚡ Bolt Token Premium</b> — token-premium machine. Stake <b>1⚡ / 5⚡ / 10⚡</b> per spin (higher ⚡ = higher $ stake &amp; wins). Stronger features and Free Games. Earn ⚡ mainly from the Reward Wheel, raffle, and some rewards.</p>
+      <p><b class="text-yellow-300">⚡ Bolt Token Premium</b> — token-premium machine. Stake <b>1⚡ / 5⚡ / 10⚡ / 20⚡ / 30⚡ / 40⚡ / 50⚡</b> per spin (higher ⚡ = higher $ stake &amp; wins). Stronger features and Free Games. Earn ⚡ mainly from the Reward Wheel, raffle, and some rewards.</p>
       <p><b class="text-pink-400">🚂 Bolt Train</b> <span class="text-gray-500">(rare)</span> — Free Hold &amp; Spin on the machine you’re playing. Same 3-match train rules + orb cash.</p>
       <p><b class="text-cyan-300">Bolt Raffle</b> — Ticket button. Mini pot every <b>20 min</b>. 1 ticket per buy (max 10 per pot). More tickets = better odds &amp; bigger prize. Sales close 5 min before draw. When you win, a <b>red badge</b> appears on the ticket — open and <b>TAP TO CLAIM</b>.</p>
       <p><b class="text-green-300">WIN meter codes</b> — Feature flashes use short tags: <b>H&amp;S</b> Hold &amp; Spin · <b>F-S</b> Free Games · <b>L-W</b> line boost · <b>EXP</b> Express · then the $ amount returns.</p>
       <p><b class="text-purple-300">Lifestyle</b> — First purchase of each item grants <b>XP + wheel tokens</b> (and sometimes ⚡ on big items). Re-equip is free. Big-ticket items are the main cash sink when bankroll grows — pure flex, no pay-to-win on the reels.</p>
       <p><b class="text-cyan-300">Reward Wheel</b> — Earn wheel tokens on wins only. <b>25 tokens = 1 spin</b>. Can pay cash, XP, wheel tokens, or <b>⚡ Bolt tokens</b>.</p>
-      <p><b class="text-yellow-300">⚡ Bolt Token Premium</b> — token-premium machine. Costs <b>1 / 5 / 10⚡ per spin</b> (no cash bet). Stronger features & free-game boost. Earn ⚡ from the <b>Reward Wheel</b>, Daily / Weekly / Monthly claims, and rare Bolt Train GRAND — not from normal line wins.</p>
+      <p><b class="text-yellow-300">⚡ Bolt Token Premium</b> — token-premium machine. Costs <b>1 / 5 / 10 / 20 / 30 / 40 / 50⚡ per spin</b> (no cash bet). Stronger features & free-game boost. Earn ⚡ from the <b>Reward Wheel</b>, Daily / Weekly / Monthly claims, and rare Bolt Train GRAND — not from normal line wins.</p>
       <p><b class="text-cyan-300">Level up</b> — <b>20</b> themed machines unlock from Level 1 to <b>195</b> (Cosmic Crown). Levels never cap — ranks rise with level or machines unlocked (Rookie → Immortal). Tap a locked machine to see its unlock level. Higher bets earn more XP. <b>Lifestyle</b> purchases grant a little XP on <b>first buy only</b>.</p>
       <p><b class="text-yellow-300">🏆 Achievements</b> — <b id="help-ach-count">580</b> badges in the lobby <b>ACH</b> panel. Progress tracks spins, features, level, machines, lifestyle, raffle, race & bankroll. Claim XP when complete (Claim All available). Free starter bolts do not count toward ⚡ badges.</p>
       <p><b class="text-pink-300">Free Games boost</b> — Each machine has its own F-S style (extra wilds, multipliers, denser highs). It only applies <b>during Free Games</b> and shows on the green <b>FREE GAMES</b> banner as <b>FREE BOOST · …</b>.</p>
@@ -5038,7 +5074,7 @@ function trainHorn(){
   setTimeout(()=>{tn(1000,'sine',0.4,0.14);tn(1400,'sine',0.3,0.1);tn(1800,'triangle',0.25,0.08);featureBell()},620);
 }
 
-const APP_VER='v7.1.3';
+const APP_VER='v7.2.3';
 const SAVE_KEY='bolt_spin_save';
 const OLD_KEYS=['ll_v20','ll_v19','ll_v18','ll_v17','ll_v16','ll_v15','ll_v13','ll_v10','ll_v9','ll_v8','ll_v7','ll_v6'];
 function flushSave(){
@@ -5089,6 +5125,7 @@ function flushSave(){
           scratchSavedFreeLeft:S._scratchSavedFreeLeft|0,
           scratchSavedFreeWin:S._scratchSavedFreeWin||0,
           scratchConsumeFree:!!S._scratchConsumeFree,
+          banked:!!S._featBanked,
           ts:Date.now()
         };
       }else if(S.playSnap&&S.playSnap.machId===S.mach.id&&S.mode==='base'){
@@ -5103,7 +5140,7 @@ function save(){if(S&&S._wiping)return;
   // so Welcome Back measures real absence, not "tab left open since session start"
   try{S.lastSeen=Date.now()}catch(_){}
   const data={
-    bal:Math.max(0,S.bal|0),lvl:S.lvl,xp:Math.max(0,S.xp|0),unlocked:S.unlocked,
+    bal:Math.max(0,cents(S.bal)),lvl:S.lvl,xp:Math.max(0,Math.floor(Number(S.xp)||0)),unlocked:S.unlocked,
     lastDaily:S.lastDaily,sound:S.sound,
     sfxVol:S.sfxVol,
     music:S.music!==false,musicMasterVol:S.musicMasterVol!=null?S.musicMasterVol:.45,musicVols:S.musicVols&&typeof S.musicVols==='object'?S.musicVols:{},
@@ -5138,7 +5175,11 @@ function load(){
       for(const k of OLD_KEYS){r=localStorage.getItem(k);if(r)break}
     }
     if(!r){initJPs();rebuildUnlocks();return}
-    const d=JSON.parse(r);
+    let d;
+    try{d=JSON.parse(r)}catch(_pe){ // v7.2.1: unreadable main save — fall back to the ll_v20/legacy mirror instead of a fresh game
+      d=null;for(const k of OLD_KEYS){try{const r2=localStorage.getItem(k);if(r2){d=JSON.parse(r2);break}}catch(__){}}
+      if(!d||typeof d!=='object')throw _pe;
+    }
     S.bal=d.bal??35000;S.lvl=d.lvl??1;S.xp=d.xp??0;S.peakBal=Math.max(d.peakBal??0,S.bal);S.bankrollTitleId=d.bankrollTitleId||titleForPeak(S.peakBal).id;if(S.bankrollTitleId==='whale')S.bankrollTitleId='hitter';S.bankrollTitleId=titleForPeak(S.bal).id;S.lifestyle=d.lifestyle||{owned:[],equipped:{home:null,car:null,boat:null,flair:null}};try{ensureLifestyle()}catch(_){};
     S.lastDaily=d.lastDaily??0;S.sound=d.sound??true;
     S.sfxVol=d.sfxVol!=null?+d.sfxVol:0.9;
@@ -5740,12 +5781,11 @@ function awardMachineJackpot(tier, paidAmount, cellEl){
 
       // Credit cash NOW (feature continues after soft total — do not rely on bank-fly)
       try{
-        S.bal=cents((S.bal||0)+prize);
         if(S.mode==='hold'||S.mode==='train'){
-          if(S.mode==='hold')S.holdWin=cents((S.holdWin||0)+prize);
-          if(S.mode==='train')S.tWin=cents((S.tWin||0)+prize);
+          // v7.2.1: orb value is already in holdWin/tWin (added on lock) and banked once at feature end
           try{setWinAmount(S.mode==='hold'?S.holdWin:S.tWin)}catch(_){}
         }else{
+          S.bal=cents((S.bal||0)+prize);
           try{setWinAmount(prize)}catch(_){}
         }
         try{noteSessionSpin(prize)}catch(_){}
@@ -7278,9 +7318,9 @@ function weekProgress(){
     spins:Math.min(WEEK_TARGETS.spins,w.spins|0),
     hold:Math.min(WEEK_TARGETS.hold,w.hold|0),
     free:Math.min(WEEK_TARGETS.free,w.free|0),
-    win:Math.min(WEEK_TARGETS.win,w.win|0),
+    win:Math.min(WEEK_TARGETS.win,Math.floor(w.win||0)),
     spinsT:WEEK_TARGETS.spins, holdT:WEEK_TARGETS.hold, freeT:WEEK_TARGETS.free, winT:WEEK_TARGETS.win,
-    ready:!w.claimed&&(w.spins|0)>=WEEK_TARGETS.spins&&(w.hold|0)>=WEEK_TARGETS.hold&&(w.free|0)>=WEEK_TARGETS.free&&(w.win|0)>=WEEK_TARGETS.win,
+    ready:!w.claimed&&(w.spins|0)>=WEEK_TARGETS.spins&&(w.hold|0)>=WEEK_TARGETS.hold&&(w.free|0)>=WEEK_TARGETS.free&&Math.floor(w.win||0)>=WEEK_TARGETS.win,
     claimed:!!w.claimed,
     endsIn:Math.max(0,(w.id+WEEK_MS)-Date.now())
   };
@@ -7343,9 +7383,9 @@ function monthProgress(){
     hold:Math.min(MONTH_TARGETS.hold,m.hold|0),
     free:Math.min(MONTH_TARGETS.free,m.free|0),
     trains:Math.min(MONTH_TARGETS.trains,m.trains|0),
-    win:Math.min(MONTH_TARGETS.win,m.win|0),
+    win:Math.min(MONTH_TARGETS.win,Math.floor(m.win||0)),
     spinsT:MONTH_TARGETS.spins,holdT:MONTH_TARGETS.hold,freeT:MONTH_TARGETS.free,trainsT:MONTH_TARGETS.trains,winT:MONTH_TARGETS.win,
-    ready:!m.claimed&&(m.spins|0)>=MONTH_TARGETS.spins&&(m.hold|0)>=MONTH_TARGETS.hold&&(m.free|0)>=MONTH_TARGETS.free&&(m.trains|0)>=MONTH_TARGETS.trains&&(m.win|0)>=MONTH_TARGETS.win,
+    ready:!m.claimed&&(m.spins|0)>=MONTH_TARGETS.spins&&(m.hold|0)>=MONTH_TARGETS.hold&&(m.free|0)>=MONTH_TARGETS.free&&(m.trains|0)>=MONTH_TARGETS.trains&&Math.floor(m.win||0)>=MONTH_TARGETS.win,
     claimed:!!m.claimed,
     endsIn:Math.max(0,monthEndMs()-Date.now())
   };
@@ -8069,6 +8109,28 @@ function tryResumePlaySnap(m){
     // Ignore snaps older than 48h
     if(snap.ts&&(Date.now()-snap.ts)>48*3600*1000){S.playSnap=null;return false}
     if(snap.mode!=='hold'&&snap.mode!=='free'&&snap.mode!=='train'&&snap.mode!=='scratch')return false;
+    // v7.2.1: never replay a feature already paid (reload on its total screen)
+    if(snap.mode==='free'&&(snap.freeLeft|0)<=0){S.playSnap=null;return false}
+    let _xn=0;try{if(snap.banked&&snap.mode==='hold'&&Array.isArray(snap.hold)&&m.hasTrain!==false)for(let i=0;i<15;i++)if(isExpressTrainSym(snap.hold[i]))_xn++}catch(_){}
+    if(_xn>0){
+      // v7.2.2: H&S already paid on its total screen — open its pending Express board (board pays only itself)
+      S.playSnap=null;S._featBanked=false;
+      S.fromFree=!!snap.fromFree;S.savedFreeLeft=snap.savedFreeLeft|0;S.savedFreeWin=snap.savedFreeWin||0;
+      S.fromBoltTrain=false;S.hold=null;S.holdWin=cents(snap.holdWin||0);
+      S.lockedTotal=snap.lockedTotal;S.lockedBetI=snap.lockedBetI;S.lockedMulI=snap.lockedMulI;S.lockedBoltStake=snap.lockedBoltStake;
+      if(snap.betI!=null)S.betI=snap.betI|0;if(snap.mulI!=null)S.mulI=snap.mulI|0;if(snap.boltStakeI!=null)S.boltStakeI=snap.boltStakeI|0;
+      S.hasTrain=true;S.expressCount=_xn;S._expressBoardN=_xn;
+      setTimeout(function(){try{if(S.mode==='base'&&S.mach&&S.mach.id===m.id)startTrain()}catch(_){}},700);
+      return false;
+    }
+    if(snap.banked&&(snap.mode==='hold'||snap.mode==='train')){
+      if(snap.fromFree&&(snap.savedFreeLeft|0)>0){
+        snap.freeWin=cents((snap.savedFreeWin||0)+(snap.holdWin||0)+(snap.mode==='train'?(snap.tWin||0):0));
+        snap.mode='free';snap.freeLeft=snap.savedFreeLeft|0;snap.fromFree=false;snap.savedFreeLeft=0;
+        snap.hold=null;snap.holdWin=0;snap.tGrid=null;snap.tWin=0;snap.tRes=0;snap.hasTrain=false;snap.expressCount=0;
+      }else{S.playSnap=null;return false}
+    }
+    S._featBanked=false;
     S.mode=snap.mode;
     S.freeLeft=snap.freeLeft|0;S.freeWin=snap.freeWin||0;
     S.hold=snap.hold||null;S.respins=snap.respins|0;S.holdWin=snap.holdWin||0;
@@ -11523,10 +11585,11 @@ function closeScratchAndResume(){
       return;
     }
   }catch(_){}
-  const resumeFree=S._scratchResumeMode==='free'||(S._scratchSavedFreeLeft|0)>0;
+  // v7.2.1: Free may already be restored (SPIN-skip of the total / dead card) — keep it, never force base
+  const resumeFree=S._scratchResumeMode==='free'||(S._scratchSavedFreeLeft|0)>0||(S.mode==='free'&&(S.freeLeft|0)>0);
   try{
     if(resumeFree){
-      try{restoreAfterScratch()}catch(_){}
+      if(S.mode!=='free'){try{restoreAfterScratch()}catch(_){}}
     }else if(S.mode==='scratch'||S.scratch){
       // Base: leave scratch mode cleanly
       S.mode='base';
@@ -11800,6 +11863,7 @@ async function onScratchCell(idx){
         if(S._scratchResumeMode==='free'||(S._scratchSavedFreeLeft|0)>0){
           try{
             S._scratchResumeMode='free';
+            S._scratchSavedFreeWin=cents((S._scratchSavedFreeWin||0)+pay); // v7.2.1: keep scratch pay in FREE GAMES total
             // freeLeft stays on _scratchSavedFreeLeft until close
           }catch(_){}
         }
@@ -12361,7 +12425,7 @@ function startHold(init){
   try{showNearMiss('HOLD & SPIN!','orb')}catch(_){}
   try{flashFeatureOnWinMeter('hold')}catch(_){}
   try{featureStartS(true)}catch(_){try{featureBell();jackS()}catch(__){}}
-  S.respins=3;S.holdWin=0;S.hasTrain=false;S.expressCount=0;S.trainJackpotPaid=false;
+  S.respins=3;S.holdWin=0;S.hasTrain=false;S.expressCount=0;S.trainJackpotPaid=false;S._featBanked=false;
   S.hold=init.map(s=>{
     if(s.t==='orb'||s.t==='train'){
       const o={...s,lock:true};
@@ -12726,7 +12790,7 @@ async function holdSpin(){
   if(S.hold.filter(Boolean).length===15){
     beginFeatSeq('hold-grand');
     const jp=curJP();const gr=cents(jp.g);
-    S.holdWin=cents(S.holdWin+gr);S.bal=cents(S.bal+S.holdWin);jp.g=S.mach.jpBase.g;
+    S.holdWin=cents(S.holdWin+gr);S.bal=cents(S.bal+S.holdWin);S._featBanked=true;try{jpBoost(S.mach.id).g=0;updJP()}catch(_){}try{flushSave()}catch(_){}
     const grandTotal=cents(S.holdWin);
     if(grandTotal>0){earnTokens(4);haptic([50,40,50,40,80]);try{addXP(xpFromFeature(grandTotal,'hold'))}catch(_){}}
     setWinAmount(grandTotal,{bankFly:true});
@@ -12769,7 +12833,7 @@ async function holdSpin(){
       }
       celebrateBoardHit(box, el, {tier:'GRAND'});
     }catch(_){}
-    try{if(S.fromBoltTrain)awardBoltPot('FULL BOARD')}catch(_){}
+    try{if(S.fromBoltTrain){const _bp=awardBoltPot('FULL BOARD');if(_bp>0){S.bal=cents(S.bal+_bp);try{flushSave()}catch(_){}}}}catch(_){} // v7.2.1: holdWin already banked above
     // Never skip Express / Free if they stacked — Grand pays first, then next feature
     try{syncExpressFromHold()}catch(_){}
     try{if(typeof syncExpressFromHold==='function')syncExpressFromHold()}catch(_){}
@@ -12809,7 +12873,7 @@ async function holdSpin(){
       }
     }catch(_){}
     // Link-style: purple train pots only on 3× match
-    S.bal=cents(S.bal+S.holdWin);
+    S.bal=cents(S.bal+S.holdWin);S._featBanked=true;try{flushSave()}catch(_){}
     if(S.holdWin>0){earnTokens(S.holdWin>=playTotal()*8?3:2);haptic([40,30,40,30,60]);}
     addXP(xpFromFeature(S.holdWin,'hold'));
     setWinAmount(S.holdWin);
@@ -12885,7 +12949,7 @@ function endHold(force){
     }
   }catch(_){}
   // Snapshot final hold board so Express / lobby reopen shows last symbols
-  try{S.playSnap=null}catch(_){}
+  try{S.playSnap=null;S._featBanked=false}catch(_){}
   // Rewards primarily fly from stopWinTicker after HOLD TOTAL; late backup if no ticker
   try{setTimeout(function(){try{flushSpinXpOrbs()}catch(_){}},2200)}catch(_){}
   saveMachineSession();
@@ -12901,7 +12965,7 @@ function endHold(force){
     S.hold=null;S.fromBoltTrain=false;S.holdWin=0;
      setTimeout(()=>{try{tryResumeAuto()}catch(_){}},350);
   }else{
-    S.mode='base';S.fromFree=false;document.getElementById('banner').classList.add('hidden');clearBannerExtras();
+    S.mode='base';S.fromFree=false;S.freeLeft=0;document.getElementById('banner').classList.add('hidden');clearBannerExtras(); // v7.2.2: freeLeft reset
     S.hold=null;S.fromBoltTrain=false;S.holdWin=0;
      restoreSavedAuto();
     setTimeout(()=>{try{tryResumeAuto()}catch(_){}},500);
@@ -12927,7 +12991,7 @@ function startTrain(){
   // Preserve free-game stack if we arrived via Hold during Free; clear hold grid
   S.hold=null;S.respins=0;
   // holdWin kept until Express ends so Free stack can include it in session total
-  S.mode='train';S.tWin=0;S.tGrid=Array(8).fill(null);
+  S.mode='train';S.tWin=0;S.tGrid=Array(8).fill(null);S._featBanked=false;
   // Extra EXPRESS during H&S: more trains = more board spins + seed cells (one board still)
   // 1 EXPRESS → 3 spins | 2 → 4 | 3 → 5 | 4+ → 5 + extra seed
   // Prefer count snapshotted at board decision (survives async totals / hold clear)
@@ -12989,6 +13053,7 @@ function startTrain(){
     tg.appendChild(c);
   }
   if(S.tWin>0)try{setWinAmount(S.tWin)}catch(_){}
+  try{flushSave()}catch(_){}
   try{trainHorn();setTimeout(()=>{try{featureBell()}catch(_){}},500);haptic([40,30,60,30,80])}catch(_){}
 }
 async function finishExpressBoard(isFortune){
@@ -13046,7 +13111,7 @@ async function finishExpressBoard(isFortune){
       const f=cents(Math.floor((curJP().j||0)*1.5));
       S.tWin=cents(totalWin+f);
       if(S.tWin>0){
-        S.bal=cents(S.bal+S.tWin);
+        S.bal=cents(S.bal+S.tWin);S._featBanked=true;try{flushSave()}catch(_){}
         try{addXP(xpFromFeature(S.tWin,'express'))}catch(_){}
       }
       setWinAmount(S.tWin);
@@ -13057,7 +13122,7 @@ async function finishExpressBoard(isFortune){
       if(boltBonus>0){try{featToast('+'+boltBonus+'⚡ + tokens','Fill-8 Express bonus','⚡',2800,'gold')}catch(_){}}
       await delay(soft?600:900);
     }else if(totalWin>0){
-      S.bal=cents(S.bal+totalWin);
+      S.bal=cents(S.bal+totalWin);S._featBanked=true;try{flushSave()}catch(_){}
       try{addXP(xpFromFeature(totalWin,'express'))}catch(_){}
       try{haptic([40,30,50])}catch(_){}
       let boltBonus=0;
@@ -13273,6 +13338,7 @@ async function trainSpin(){
   }catch(_){}
 
   try{S.tickering=false;S.winPause=false;S.awaitCollect=false}catch(_){}
+  try{flushSave()}catch(_){} // v7.2.2: keep resume snapshot current after each Express spin
   if(filled>=8){await finishExpressBoard(true);return}
   if((S.tRes|0)<=0){await finishExpressBoard(false);return}
   }finally{
@@ -13289,6 +13355,7 @@ async function endTrain(){
   S.tRes=0;
   S.tGrid=null;
   S.expressCount=0;S.hasTrain=false;S._expressBoardN=0;S._expressResBase=0;
+  try{S.playSnap=null;S._featBanked=false}catch(_){}
   const savedTWin=cents(S.tWin||0);
   const savedHWin=cents(S.holdWin||S._holdWinAtTrain||0);
   const combined=cents(savedTWin+savedHWin);
@@ -13305,7 +13372,7 @@ async function endTrain(){
     try{ui()}catch(_){}
     setTimeout(()=>{try{tryResumeAuto()}catch(_){}},400);
   }else{
-    S.mode='base';S.fromFree=false;
+    S.mode='base';S.fromFree=false;S.freeLeft=0; // v7.2.2: freeLeft reset
     try{unlockStake()}catch(_){}
     try{
       document.getElementById('banner').classList.add('hidden');
@@ -15973,6 +16040,115 @@ document.getElementById('btn-sound').onclick=()=>{
   if(ot)ot.onclick=()=>{try{click()}catch(_){};if(os)os.scrollTop=0};
   if(oc)oc.onclick=()=>{click();closeModal('m-opt')};
 })();
+
+/* ---------- Backup & Restore (v7.2.0) ---------- */
+function exportSaveBackup(){
+  try{
+    // Ensure latest state is flushed before export
+    try{flushSave()}catch(_){}
+    try{save()}catch(_){}
+    const raw = localStorage.getItem(SAVE_KEY) || localStorage.getItem('ll_v20');
+    if(!raw){
+      const msg=document.getElementById('opt-backup-msg');
+      if(msg)msg.textContent='No save data found to export.';
+      return;
+    }
+    let data;
+    try{data=JSON.parse(raw)}catch(e){
+      const msg=document.getElementById('opt-backup-msg');
+      if(msg)msg.textContent='Save data is corrupted and cannot be exported.';
+      return;
+    }
+    // Wrap with metadata so restore can validate
+    const payload={
+      _boltSpinBackup:true,
+      version: (typeof APP_VER!=='undefined'?APP_VER:'unknown'),
+      exportedAt: new Date().toISOString(),
+      data: data
+    };
+    const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    const _d=new Date(),_p=n=>String(n).padStart(2,'0');const ts=_d.getFullYear()+'-'+_p(_d.getMonth()+1)+'-'+_p(_d.getDate())+'T'+_p(_d.getHours())+'-'+_p(_d.getMinutes())+'-'+_p(_d.getSeconds()); // v7.2.2: local time
+    a.href=url;
+    a.download='bolt-spin-backup-'+ts+'.json';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){try{URL.revokeObjectURL(url);a.remove()}catch(_){}},1500);
+    const msg=document.getElementById('opt-backup-msg');
+    if(msg)msg.innerHTML='<span class="text-green-300">Backup downloaded.</span> Keep the file safe.';
+  }catch(e){
+    const msg=document.getElementById('opt-backup-msg');
+    if(msg)msg.textContent='Backup failed: '+(e&&e.message?e.message:'unknown error');
+  }
+}
+function importSaveBackup(file){
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=async function(ev){
+    try{
+      const text=String(ev.target.result||'');
+      let payload=JSON.parse(text);
+      // Accept both wrapped { _boltSpinBackup, data } and raw save objects
+      let data=null;
+      if(payload && payload._boltSpinBackup && payload.data && typeof payload.data==='object'){
+        data=payload.data;
+      }else{ // v7.2.2: only genuine Bolt Spin backup files (export wrapper) are accepted
+        throw new Error('Not a Bolt Spin save file');
+      }
+      // Minimal sanity
+      if(typeof data.bal!=='number' && data.bal!=null) data.bal=Number(data.bal)||0;
+      const ok=await askConfirm(
+        'Restore this backup?',
+        'This will overwrite your current progress in this browser with the backup.\n\nBalance, level, unlocks, tokens, and settings will be replaced.\n\nThis cannot be undone (make a backup first if unsure).',
+        'Cancel',
+        'Restore now'
+      );
+      // askConfirm: true = alt (Restore), false = OK (Cancel)
+      if(!ok){
+        const msg=document.getElementById('opt-backup-msg');
+        if(msg)msg.textContent='Restore cancelled.';
+        return;
+      }
+      S._wiping=true;
+      try{
+        localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+        localStorage.setItem('ll_v20', JSON.stringify(data));
+        try{sessionStorage.clear()}catch(_){} // v7.2.2: drop stale session-only keys (wheel result)
+      }catch(e){
+        S._wiping=false;
+        throw e;
+      }
+      const msg=document.getElementById('opt-backup-msg');
+      if(msg)msg.innerHTML='<span class="text-green-300">Restored. Reloading…</span>';
+      setTimeout(function(){
+        try{location.reload()}catch(_){location.href=location.href.split('#')[0]}
+      },400);
+    }catch(e){
+      const msg=document.getElementById('opt-backup-msg');
+      if(msg){msg.textContent='';const sp=document.createElement('span');sp.className='text-red-300';sp.textContent='Restore failed: '+(e&&e.message?e.message:'invalid file');msg.appendChild(sp)}
+    }
+  };
+  reader.onerror=function(){
+    const msg=document.getElementById('opt-backup-msg');
+    if(msg)msg.textContent='Could not read the file.';
+  };
+  reader.readAsText(file);
+}
+(function wireBackupRestore(){
+  const btnB=document.getElementById('opt-backup');
+  const btnR=document.getElementById('opt-restore');
+  const fileI=document.getElementById('opt-restore-file');
+  if(btnB)btnB.onclick=function(){try{click()}catch(_){};exportSaveBackup()};
+  if(btnR&&fileI){
+    btnR.onclick=function(){try{click()}catch(_){};fileI.value='';fileI.click()};
+    fileI.onchange=function(){
+      const f=fileI.files&&fileI.files[0];
+      if(f)importSaveBackup(f);
+    };
+  }
+})();
+
 const optReset=document.getElementById('opt-reset');
 if(optReset)optReset.onclick=async()=>{
   click();
@@ -17698,7 +17874,88 @@ try{const _ap=document.getElementById('admin-par');if(_ap)_ap.onclick=function()
   };
 })();
 
-if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+
+/* Service worker + update prompt (v7.2.0) */
+(function setupServiceWorkerAndUpdates(){
+  if(!('serviceWorker' in navigator))return;
+  // v7.2.1: first install also fires controllerchange/BOLT_SW_UPDATED — only prompt when a previous SW controlled this page
+  const hadController=!!navigator.serviceWorker.controller;
+  function showUpdateBanner(){
+    try{
+      const b=document.getElementById('update-banner');
+      if(b)b.classList.remove('hidden');
+    }catch(_){}
+  }
+  function hideUpdateBanner(){
+    try{
+      const b=document.getElementById('update-banner');
+      if(b)b.classList.add('hidden');
+    }catch(_){}
+  }
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('./sw.js').then(function(reg){
+      // Poll for updates occasionally while tab is open
+      try{
+        setInterval(function(){try{reg.update()}catch(_){}}, 60*60*1000);
+      }catch(_){}
+      // New worker found waiting
+      if(reg.waiting){
+        showUpdateBanner();
+      }
+      reg.addEventListener('updatefound',function(){
+        const nw=reg.installing;
+        if(!nw)return;
+        nw.addEventListener('statechange',function(){
+          if(nw.state==='installed'&&navigator.serviceWorker.controller){
+            // Updated content is available; waiting SW will activate after skipWaiting
+            showUpdateBanner();
+          }
+        });
+      });
+    }).catch(function(){});
+  });
+  // When a new SW takes control, offer restart
+  navigator.serviceWorker.addEventListener('controllerchange',function(){
+    // Soft signal — banner already helpful; do not auto-reload (preserves in-progress spin)
+    if(hadController)showUpdateBanner();
+  });
+  navigator.serviceWorker.addEventListener('message',function(ev){
+    try{
+      if(ev.data&&ev.data.type==='BOLT_SW_UPDATED'&&hadController)showUpdateBanner();
+    }catch(_){}
+  });
+  // Wire buttons once DOM ready
+  function wireBtns(){
+    const r=document.getElementById('update-restart-btn');
+    const d=document.getElementById('update-dismiss-btn');
+    if(r&&!r._wired){
+      r._wired=true;
+      r.onclick=function(){
+        try{click()}catch(_){}
+        // Ask waiting SW to activate then hard reload
+        try{
+          if(navigator.serviceWorker.controller){
+            navigator.serviceWorker.controller.postMessage({type:'SKIP_WAITING'});
+          }
+          navigator.serviceWorker.getRegistration().then(function(reg){
+            if(reg&&reg.waiting)reg.waiting.postMessage({type:'SKIP_WAITING'});
+          }).catch(function(){});
+        }catch(_){}
+        setTimeout(function(){
+          try{location.reload()}catch(_){location.href=location.href.split('#')[0]}
+        },200);
+      };
+    }
+    if(d&&!d._wired){
+      d._wired=true;
+      d.onclick=function(){try{click()}catch(_){};hideUpdateBanner()};
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wireBtns);
+  else wireBtns();
+  setInterval(wireBtns,3000);
+})();
+
 window.addEventListener('pagehide',()=>{try{flushSave()}catch(_){}});
 window.addEventListener('beforeunload',()=>{try{flushSave()}catch(_){}});
 document.addEventListener('visibilitychange',()=>{
@@ -18118,7 +18375,7 @@ try{startMusicForCurrentView()}catch(_){}
   
   // ── CONSOLE BANNER ──
 console.log(
-'BOLT-SPIN-SLOTS-RELEASE-v7.1.3 ~ Bolt Spin Slots — Hold & Spin style virtual slots. Entertainment only. Not real-money gambling.                                 \n' +
+'BOLT-SPIN-SLOTS-RELEASE-v7.2.3 ~ Bolt Spin Slots — Hold & Spin style virtual slots. Entertainment only. Not real-money gambling.                                 \n' +
     'Copyright (c) 2026 Bolt Spin Slots',
 );
 })();
