@@ -65,59 +65,6 @@ Progress is saved in **localStorage** on that device/browser only. Use **Backup*
 
 ---
 
-## Backup & Restore (new in v7.2.0)
-
-Open **Options** (cog):
-
-- **Backup** — downloads a JSON file of your full progress (balance, level, unlocks, tokens, stats, etc.).
-- **Restore** — pick a previous backup file; confirms before overwriting the current browser save, then reloads.
-
-Use this before clearing site data, switching browsers/devices, or after a reset.
-
----
-
-## Offline / updates
-
-- **First visit** needs network (CDN assets + latest shell). This is intentional so players receive the current release.
-- **After first successful online visit**, the service worker caches the app shell and CDN chrome. Music beds cache **on first play** of each track.
-- **True offline play** is supported once the shell has been cached. Fully offline first paint on a never-online device is not a goal of this build.
-- When a **new version** is deployed, an open tab may show an **Update available** banner. Tap **Restart** to load the latest release. Progress remains in localStorage (or your Backup file).
-
----
-
-## Options
-
-| Control | What it does |
-|--------|----------------|
-| Sound effects / music / lobby music | On/off + volume |
-| Auto-spin | Hold SPIN or use the control; optional balance floor / unlimited |
-| Speed | Normal or Fast |
-| Haptics | Vibration on supported devices |
-| Reduced motion | Fewer particles / calmer effects |
-| **Backup / Restore** | Export or import save JSON |
-| Reset save data | Wipe this browser’s progress |
-
-UI scale is fixed at **100%** — use the browser zoom if you need larger or smaller chrome.
-
----
-
-## Tips
-
-- Complete **goal sets** on a machine to raise its stake ladder (full ladder after enough sets).
-- **Weekly** and **monthly** challenges pay extra rewards from the lobby when ready.
-- Switch machines if a cabinet feels cold — variance is real; bankroll management matters.
-- Make a **Backup** before major browser updates or device changes.
-
----
-
-## Changelog
-
-- **v7.2.3** — Link previews: added Open Graph / Twitter Card tags and `og-image.png` (1200×630) so shared links show a Bolt Spin Slots banner in Discord, Messenger, WhatsApp, iMessage, X and Slack. No gameplay changes.
-- **v7.2.2** — Polish/fix release: help text now lists all Premium stakes (1–50⚡) and states 🚂 pots don't scale with stake; Restore only accepts genuine Bolt Spin backup files and clears stale session data; backup filename uses local time; free-spin counter resets when a feature ends in the base game; reloading on a Hold & Spin total now still opens its pending Express board (no double pay); resume snapshot saved after each Express spin.
-- **v7.2.1** — Bug-fix release: board-colour jackpot orbs (MINI/MINOR/MAJOR) in Hold & Spin / Express now pay once (were over-credited); reloading on a Hold/Express/Free total no longer replays and re-pays the feature; balances/XP above ~$2.1B no longer reset to 0 on save (and cents are kept); Machine GRAND meter now resets after it pays; Bolt Pot on a full Bolt Train board is now credited; Scratch wins during Free Games count in the Free total, and skipping the Scratch total (or a dead card) no longer cancels the remaining Free Games; Update banner no longer shows on the very first visit; restore error text is shown as plain text; an unreadable main save now falls back to the ll_v20 mirror instead of starting a new game.
-
----
-
 ## Disclaimer
 
 This is a **fan-made virtual game** for entertainment only.  
